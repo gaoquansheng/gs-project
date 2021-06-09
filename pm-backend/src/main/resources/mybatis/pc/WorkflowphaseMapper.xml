@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.pc.mapper.WorkflowphaseMapper">
+    
+    <resultMap type="Workflowphase" id="WorkflowphaseResult">
+        <result property="phaseCode"    column="PhaseCode"    />
+        <result property="phaseName"    column="PhaseName"    />
+        <result property="parentCode"    column="ParentCode"    />
+        <result property="phaseDesc"    column="PhaseDesc"    />
+    </resultMap>
+
+    <sql id="selectWorkflowphaseVo">
+        select PhaseCode, PhaseName, ParentCode, PhaseDesc from workflowphase
+    </sql>
+
+    <select id="selectWorkflowphaseList"  resultMap="WorkflowphaseResult">
+        <include refid="selectWorkflowphaseVo"/>
+    </select>
+    
+    <select id="selectWorkflowphaseById" parameterType="String" resultMap="WorkflowphaseResult">
+        <include refid="selectWorkflowphaseVo"/>
+        where PhaseCode = #{phaseCode}
+    </select>
+        
+    <insert id="insertWorkflowphase" parameterType="Workflowphase">
+        insert into workflowphase
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="phaseCode != null">PhaseCode,</if>
+            <if test="phaseName != null">PhaseName,</if>
+            <if test="parentCode != null">ParentCode,</if>
+            <if test="phaseDesc != null">PhaseDesc,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="phaseCode != null">#{phaseCode},</if>
+            <if test="phaseName != null">#{phaseName},</if>
+            <if test="parentCode != null">#{parentCode},</if>
+            <if test="phaseDesc != null">#{phaseDesc},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWorkflowphase" parameterType="Workflowphase">
+        update workflowphase
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="phaseName != null">PhaseName = #{phaseName},</if>
+            <if test="parentCode != null">ParentCode = #{parentCode},</if>
+            <if test="phaseDesc != null">PhaseDesc = #{phaseDesc},</if>
+        </trim>
+        where PhaseCode = #{phaseCode}
+    </update>
+
+    <delete id="deleteWorkflowphaseById" parameterType="String">
+        delete from workflowphase where PhaseCode = #{phaseCode}
+    </delete>
+
+    <delete id="deleteWorkflowphaseByIds" parameterType="String">
+        delete from workflowphase where PhaseCode in 
+        <foreach item="phaseCode" collection="array" open="(" separator="," close=")">
+            #{phaseCode}
+        </foreach>
+    </delete>
+    
+</mapper>

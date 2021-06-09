@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.pc.mapper.ProjectcategoryMapper">
+
+    <resultMap type="Projectcategory" id="ProjectcategoryResult">
+        <result property="categoryCode"    column="CategoryCode"    />
+        <result property="categoryName"    column="CategoryName"    />
+        <result property="enabled"    column="Enabled"    />
+        <result property="startMonth"    column="StartMonth"    />
+        <result property="startDay"    column="StartDay"    />
+        <result property="endMonth"    column="Endmonth"    />
+        <result property="endDay"    column="EndDay"    />
+        <result property="hasBudgetPlan"    column="HasBudgetPlan"    />
+        <result property="hasBudgetYearplan"    column="HasBudgetYearPlan"    />
+        <result property="hasBudgetDesc"    column="HasBudgetDesc"    />
+        <result property="hasSelfFinancing"    column="HasSelfFinancing"    />
+        <result property="hasOrgs"    column="HasOrgs"    />
+        <result property="hasMembers"    column="HasMembers"    />
+    </resultMap>
+
+    <sql id="selectProjectcategoryVo">
+        select CategoryCode, CategoryName, Enabled, StartMonth, StartDay, Endmonth, EndDay, HasBudgetPlan, HasBudgetYearPlan, HasBudgetDesc, HasSelfFinancing, HasOrgs, HasMembers from projectcategory
+    </sql>
+
+    <select id="selectProjectcategoryList" parameterType="Projectcategory" resultMap="ProjectcategoryResult">
+        <include refid="selectProjectcategoryVo"/>
+        <where>
+            <if test="categoryName != null  and categoryName != ''"> and CategoryName like concat('%', #{categoryName}, '%')</if>
+            <if test="enabled != null  and enabled != ''"> and Enabled = #{enabled}</if>
+        </where>
+    </select>
+
+    <select id="selectProjectcategoryById" parameterType="String" resultMap="ProjectcategoryResult">
+        <include refid="selectProjectcategoryVo"/>
+        where CategoryCode = #{categoryCode}
+    </select>
+
+    <insert id="insertProjectcategory" parameterType="Projectcategory">
+        insert into projectcategory
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="categoryCode != null and categoryCode != ''">CategoryCode,</if>
+            <if test="categoryName != null and categoryName != ''">CategoryName,</if>
+            <if test="enabled != null">Enabled,</if>
+            <if test="startMonth != null">StartMonth,</if>
+            <if test="startDay != null">StartDay,</if>
+            <if test="endMonth != null">Endmonth,</if>
+            <if test="endDay != null">EndDay,</if>
+            <if test="hasBudgetPlan != null">HasBudgetPlan,</if>
+            <if test="hasBudgetYearplan != null">HasBudgetYearPlan,</if>
+            <if test="hasBudgetDesc != null">HasBudgetDesc,</if>
+            <if test="hasSelfFinancing != null">HasSelfFinancing,</if>
+            <if test="hasOrgs != null">HasOrgs,</if>
+            <if test="hasMembers != null">HasMembers,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="categoryCode != null and categoryCode != ''">#{categoryCode},</if>
+            <if test="categoryName != null and categoryName != ''">#{categoryName},</if>
+            <if test="enabled != null">#{enabled},</if>
+            <if test="startMonth != null">#{startMonth},</if>
+            <if test="startDay != null">#{startDay},</if>
+            <if test="endMonth != null">#{endMonth},</if>
+            <if test="endDay != null">#{endDay},</if>
+            <if test="hasBudgetPlan != null">#{hasBudgetPlan},</if>
+            <if test="hasBudgetYearplan != null">#{hasBudgetYearplan},</if>
+            <if test="hasBudgetDesc != null">#{hasBudgetDesc},</if>
+            <if test="hasSelfFinancing != null">#{hasSelfFinancing},</if>
+            <if test="hasOrgs != null">#{hasOrgs},</if>
+            <if test="hasMembers != null">#{hasMembers},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProjectcategory" parameterType="Projectcategory">
+        update projectcategory
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="categoryName != null and categoryName != ''">CategoryName = #{categoryName},</if>
+            <if test="enabled != null">Enabled = #{enabled},</if>
+            <if test="startMonth != null">StartMonth = #{startMonth},</if>
+            <if test="startDay != null">StartDay = #{startDay},</if>
+            <if test="endMonth != null">Endmonth = #{endMonth},</if>
+            <if test="endDay != null">EndDay = #{endDay},</if>
+            <if test="hasBudgetPlan != null">HasBudgetPlan = #{hasBudgetPlan},</if>
+            <if test="hasBudgetYearplan != null">HasBudgetYearPlan = #{hasBudgetYearplan},</if>
+            <if test="hasBudgetDesc != null">HasBudgetDesc = #{hasBudgetDesc},</if>
+            <if test="hasSelfFinancing != null">HasSelfFinancing = #{hasSelfFinancing},</if>
+            <if test="hasOrgs != null">HasOrgs = #{hasOrgs},</if>
+            <if test="hasMembers != null">HasMembers = #{hasMembers},</if>
+        </trim>
+        where CategoryCode = #{categoryCode}
+    </update>
+
+    <delete id="deleteProjectcategoryById" parameterType="String">
+        delete from projectcategory where CategoryCode = #{categoryCode}
+    </delete>
+
+    <delete id="deleteProjectcategoryByIds" parameterType="String">
+        delete from projectcategory where CategoryCode in
+        <foreach item="categoryCode" collection="array" open="(" separator="," close=")">
+            #{categoryCode}
+        </foreach>
+    </delete>
+
+    <select id="checkProjectCategory" parameterType="String" resultType="int">
+        select count(*) from projectcategory where CategoryCode = #{categoryCode}
+    </select>
+</mapper>

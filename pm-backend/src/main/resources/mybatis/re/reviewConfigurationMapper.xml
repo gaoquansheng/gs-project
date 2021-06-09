@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.re.mapper.reviewConfigurationMapper">
+    
+    <resultMap type="reviewConfiguration" id="reviewConfigurationResult">
+        <result property="categoryCode"    column="categorycode"    />
+        <result property="phaseCode"    column="phasecode"    />
+        <result property="businessReviewConfiguation"    column="BusinessReviewConfiguation"    />
+        <result property="budgetReviewConfiguation"    column="BudgetReviewConfiguation"    />
+        <result property="scoreReviewConfiguation"    column="ScoreReviewConfiguation"    />
+        <result property="voteReviewConfiguation"    column="VoteReviewConfiguation"    />
+    </resultMap>
+    <select id="checkUnique" resultType="int">
+        select count(*) from reviewconfiguration where categoryCode = #{categoryCode} and phaseCode = #{phaseCode}
+    </select>
+
+    <sql id="selectreviewConfigurationVo">
+        select categorycode, phasecode, BusinessReviewConfiguation, BudgetReviewConfiguation, ScoreReviewConfiguation, VoteReviewConfiguation from reviewconfiguration
+    </sql>
+
+    <select id="selectreviewConfigurationList" parameterType="reviewConfiguration" resultMap="reviewConfigurationResult">
+        <include refid="selectreviewConfigurationVo"/>
+        <where>
+        </where>
+    </select>
+    
+    <select id="selectreviewConfigurationById" parameterType="String" resultMap="reviewConfigurationResult">
+        <include refid="selectreviewConfigurationVo"/>
+        where categorycode = #{categoryCode}
+    </select>
+        
+    <insert id="insertreviewConfiguration" parameterType="reviewConfiguration">
+        insert into reviewconfiguration
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="categoryCode != null">categorycode,</if>
+            <if test="phaseCode != null">phasecode,</if>
+            <if test="businessReviewConfiguation != null">BusinessReviewConfiguation,</if>
+            <if test="budgetReviewConfiguation != null">BudgetReviewConfiguation,</if>
+            <if test="scoreReviewConfiguation != null">ScoreReviewConfiguation,</if>
+            <if test="voteReviewConfiguation != null">VoteReviewConfiguation,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="categoryCode != null">#{categoryCode},</if>
+            <if test="phaseCode != null">#{phaseCode},</if>
+            <if test="businessReviewConfiguation != null">#{businessReviewConfiguation},</if>
+            <if test="budgetReviewConfiguation != null">#{budgetReviewConfiguation},</if>
+            <if test="scoreReviewConfiguation != null">#{scoreReviewConfiguation},</if>
+            <if test="voteReviewConfiguation != null">#{voteReviewConfiguation},</if>
+         </trim>
+    </insert>
+
+    <update id="updatereviewConfiguration" parameterType="reviewConfiguration">
+        update reviewconfiguration
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="phaseCode != null">phasecode = #{phaseCode},</if>
+            <if test="businessReviewConfiguation != null">BusinessReviewConfiguation = #{businessReviewConfiguation},</if>
+            <if test="budgetReviewConfiguation != null">BudgetReviewConfiguation = #{budgetReviewConfiguation},</if>
+            <if test="scoreReviewConfiguation != null">ScoreReviewConfiguation = #{scoreReviewConfiguation},</if>
+            <if test="voteReviewConfiguation != null">VoteReviewConfiguation = #{voteReviewConfiguation},</if>
+        </trim>
+        where categorycode = #{categoryCode}
+    </update>
+
+    <delete id="deletereviewConfigurationById" parameterType="String">
+        delete from reviewconfiguration where categorycode = #{categoryCode}
+    </delete>
+
+    <delete id="deletereviewConfigurationByIds" parameterType="String">
+        delete from reviewconfiguration where categorycode in 
+        <foreach item="categoryCode" collection="array" open="(" separator="," close=")">
+            #{categoryCode}
+        </foreach>
+    </delete>
+
+
+    
+</mapper>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.pc.mapper.OpentimeMapper">
+
+    <resultMap type="Opentime" id="OpentimeResult">
+        <result property="rId"    column="Rid"    />
+        <result property="openYear"    column="OpenYear"    />
+        <result property="startTime"    column="StartTime"    />
+        <result property="endTime"    column="EndTime"    />
+        <result property="phaseCode"    column="PhaseCode"    />
+        <result property="categoryCode"    column="CategoryCode"    />
+        <result property="categoryName"    column="CategoryName"    />
+        <result property="phaseName"    column="PhaseName"    />
+    </resultMap>
+
+    <sql id="selectOpentimeVo">
+        select Rid, OpenYear, StartTime, EndTime, op.PhaseCode, op.CategoryCode ,pc.CategoryName,wp.PhaseName from opentime op left join projectcategory pc on op.CategoryCode = pc.CategoryCode
+        left join workflowphase wp on op.PhaseCode = wp.PhaseCode
+    </sql>
+
+    <select id="selectOpentimeList" parameterType="Opentime" resultMap="OpentimeResult">
+        <include refid="selectOpentimeVo"/>
+        <where>
+            <if test="openYear != null ">and op.OpenYear = #{openYear}</if>
+            <if test="categoryCode != null  and categoryCode != ''">and op.CategoryCode = #{categoryCode}</if>
+            <if test="phaseCode != null  and phaseCode != ''">and op.PhaseCode = #{phaseCode}</if>
+        </where>
+    </select>
+
+    <select id="selectOpentimeById" parameterType="Long" resultMap="OpentimeResult">
+        <include refid="selectOpentimeVo"/>
+        <where>
+            <if test="rId != null ">and op.Rid = #{rId}</if>
+        </where>
+    </select>
+
+    <insert id="insertOpentime" parameterType="Opentime">
+        insert into opentime
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="rId != null">Rid,</if>
+            <if test="openYear != null">OpenYear,</if>
+            <if test="startTime != null">StartTime,</if>
+            <if test="endTime != null">EndTime,</if>
+            <if test="phaseCode != null and phaseCode != ''">PhaseCode,</if>
+            <if test="categoryCode != null and categoryCode != ''">CategoryCode,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rId != null">#{rId},</if>
+            <if test="openYear != null">#{openYear},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="phaseCode != null and phaseCode != ''">#{phaseCode},</if>
+            <if test="categoryCode != null and categoryCode != ''">#{categoryCode},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOpentime" parameterType="Opentime">
+        update opentime
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="openYear != null">OpenYear = #{openYear},</if>
+            <if test="startTime != null">StartTime = #{startTime},</if>
+            <if test="endTime != null">EndTime = #{endTime},</if>
+            <if test="phaseCode != null and phaseCode != ''">PhaseCode = #{phaseCode},</if>
+            <if test="categoryCode != null and categoryCode != ''">CategoryCode = #{categoryCode},</if>
+        </trim>
+        where Rid = #{rId}
+    </update>
+
+    <delete id="deleteOpentimeById" parameterType="Long">
+        delete from opentime where Rid = #{rId}
+    </delete>
+
+    <delete id="deleteOpentimeByIds" parameterType="String">
+        delete from opentime where Rid in
+        <foreach item="rId" collection="array" open="(" separator="," close=")">
+            #{rId}
+        </foreach>
+    </delete>
+
+</mapper>

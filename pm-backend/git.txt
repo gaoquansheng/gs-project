@@ -1,0 +1,47 @@
+
+一、去除git的版本控制，有两种方式。
+
+1.可以直接将该项目中所有文件夹下的.git文件找出并删除
+
+2.还可以通过命令的方式来操作。如下
+
+你需要先打开项目文件，
+然后,在文件中选择git bash here,进入git命令
+git会进入当前文件目录，
+然后执行如下命令：
+find . -name ".git" | xargs rm -Rf
+该项目就会去除git的版本控制了。再修改的话也不会影响git的版本库。
+
+二、初次导入代码到git上，务必使用http方式，因为服务器防火墙不允许使用SSH，并且在本地hosts文件中解析www.mygit.com 211.71.233.52
+git init
+git remote add origin http://www.mygit.com:9988/bigdata/pm-backend.git
+git add .
+git commit -m "Initial commit"
+git push -u origin master
+
+三、首次从git服务器上下载代码
+Git 全局设置
+git config --global user.name "xxx"
+git config --global user.email "xxx@163.com"
+
+
+创建新版本库
+git clone http://www.mygit.com:9988/bigdata/pm-backend.git
+
+
+
+
+四、开发过程中
+
+设置为http方式
+git remote set-url origin http://www.mygit.com:9988/bigdata/pm-backend.git
+
+添加或修改文件后，提交到服务器
+git add README.md
+git commit -m "add README"
+git push -u origin master
+
+从服务器上更新文件下来
+git pull origin master
+
+

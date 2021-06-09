@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.pm.mapper.ProjectdocMapper">
+
+    <resultMap type="Projectdoc" id="ProjectdocResult">
+        <result property="docId"    column="DocId"    />
+        <result property="docTitle"    column="DocTitle"    />
+        <result property="docPath"    column="DocPath"    />
+        <result property="projectId"    column="ProjectId"    />
+        <result property="categoryCode"    column="CategoryCode"    />
+        <result property="phaseCode"    column="PhaseCode"    />
+        <result property="uploadTime"    column="UploadTime"    />
+        <result property="uploadBy"    column="UploadBy"    />
+        <result property="passed"    column="Passed"    />
+        <result property="review"    column="Review"    />
+        <result property="reviewBy"    column="ReviewBy"    />
+        <result property="reviewTime"    column="ReviewTime"    />
+        <result property="phaseName"    column="PhaseName"    />
+    </resultMap>
+
+    <sql id="selectProjectdocVo">
+        select DocId, DocTitle, DocPath, ProjectId, CategoryCode, pd.PhaseCode, UploadTime, UploadBy, Passed, Review, ReviewBy, ReviewTime,PhaseName from projectdoc pd
+        left join workflowphase wp on  pd.PhaseCode = wp.PhaseCode
+    </sql>
+
+    <select id="selectProjectdocList" parameterType="Projectdoc" resultMap="ProjectdocResult">
+        <include refid="selectProjectdocVo"/>
+        <where>
+            <if test="categoryCode != null  and categoryCode != ''"> and CategoryCode = #{categoryCode}</if>
+            <if test="phaseCode != null  and phaseCode != ''"> and  pd.PhaseCode = #{phaseCode}</if>
+            <if test="projectId != null  and projectId != ''"> and  pd.ProjectId = #{projectId}</if>
+            <if test="passed != null  and passed != ''"> and  pd.Passed = #{passed}</if>
+        </where>
+    </select>
+
+    <select id="selectProjectdocById" parameterType="Long" resultMap="ProjectdocResult">
+        <include refid="selectProjectdocVo"/>
+        where DocId = #{docId}
+    </select>
+
+    <insert id="insertProjectdoc" parameterType="Projectdoc" useGeneratedKeys="true" keyProperty="docId">
+        insert into projectdoc
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="docTitle != null and docTitle != ''">DocTitle,</if>
+            <if test="docPath != null and docPath != ''">DocPath,</if>
+            <if test="projectId != null">ProjectId,</if>
+            <if test="categoryCode != null">CategoryCode,</if>
+            <if test="phaseCode != null">PhaseCode,</if>
+            <if test="uploadTime != null">UploadTime,</if>
+            <if test="uploadBy != null">UploadBy,</if>
+            <if test="passed != null">Passed,</if>
+            <if test="review != null">Review,</if>
+            <if test="reviewBy != null">ReviewBy,</if>
+            <if test="reviewTime != null">ReviewTime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="docTitle != null and docTitle != ''">#{docTitle},</if>
+            <if test="docPath != null and docPath != ''">#{docPath},</if>
+            <if test="projectId != null">#{projectId},</if>
+            <if test="categoryCode != null">#{categoryCode},</if>
+            <if test="phaseCode != null">#{phaseCode},</if>
+            <if test="uploadTime != null">#{uploadTime},</if>
+            <if test="uploadBy != null">#{uploadBy},</if>
+            <if test="passed != null">#{passed},</if>
+            <if test="review != null">#{review},</if>
+            <if test="reviewBy != null">#{reviewBy},</if>
+            <if test="reviewTime != null">#{reviewTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProjectdoc" parameterType="Projectdoc">
+        update projectdoc
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="docTitle != null and docTitle != ''">DocTitle = #{docTitle},</if>
+            <if test="docPath != null and docPath != ''">DocPath = #{docPath},</if>
+            <if test="projectId != null">ProjectId = #{projectId},</if>
+            <if test="categoryCode != null">CategoryCode = #{categoryCode},</if>
+            <if test="phaseCode != null">PhaseCode = #{phaseCode},</if>
+            <if test="uploadTime != null">UploadTime = #{uploadTime},</if>
+            <if test="uploadBy != null">UploadBy = #{uploadBy},</if>
+            <if test="passed != null">Passed = #{passed},</if>
+            <if test="review != null">Review = #{review},</if>
+            <if test="reviewBy != null">ReviewBy = #{reviewBy},</if>
+            <if test="reviewTime != null">ReviewTime = #{reviewTime},</if>
+        </trim>
+        where DocId = #{docId}
+    </update>
+
+    <delete id="deleteProjectdocById" parameterType="Long">
+        delete from projectdoc where DocId = #{docId}
+    </delete>
+
+    <delete id="deleteProjectdocByIds" parameterType="String">
+        delete from projectdoc where DocId in
+        <foreach item="docId" collection="array" open="(" separator="," close=")">
+            #{docId}
+        </foreach>
+    </delete>
+
+</mapper>

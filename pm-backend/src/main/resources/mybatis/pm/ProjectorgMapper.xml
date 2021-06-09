@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.pm.mapper.ProjectorgMapper">
+
+    <resultMap type="Projectorg" id="ProjectorgResult">
+        <result property="rid"    column="Rid"    />
+        <result property="projectId"    column="ProjectId"    />
+        <result property="categoryCode"    column="CategoryCode"    />
+        <result property="phaseCode"    column="PhaseCode"    />
+        <result property="orgCode"    column="OrgCode"    />
+        <result property="orgName"    column="OrgName"    />
+        <result property="orgAdminname"    column="OrgAdminName"    />
+        <result property="orgTel"    column="OrgTel"    />
+    </resultMap>
+
+    <sql id="selectProjectorgVo">
+        select Rid, ProjectId, CategoryCode, PhaseCode, OrgCode, OrgName, OrgAdminName, OrgTel from projectorg
+    </sql>
+
+    <select id="selectProjectorgList" resultMap="ProjectorgResult">
+        <include refid="selectProjectorgVo"/>
+        <where>
+          ProjectId = #{projectId} and PhaseCode = #{phaseCode}
+        </where>
+    </select>
+
+    <select id="selectProjectorgById" parameterType="Long" resultMap="ProjectorgResult">
+        <include refid="selectProjectorgVo"/>
+        where Rid = #{rid}
+    </select>
+
+    <insert id="insertProjectorg" parameterType="Projectorg" useGeneratedKeys="true" keyProperty="rid">
+        insert into projectorg
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null">ProjectId,</if>
+            <if test="categoryCode != null">CategoryCode,</if>
+            <if test="phaseCode != null">PhaseCode,</if>
+            <if test="orgCode != null">OrgCode,</if>
+            <if test="orgName != null">OrgName,</if>
+            <if test="orgAdminname != null">OrgAdminName,</if>
+            <if test="orgTel != null">OrgTel,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null">#{projectId},</if>
+            <if test="categoryCode != null">#{categoryCode},</if>
+            <if test="phaseCode != null">#{phaseCode},</if>
+            <if test="orgCode != null">#{orgCode},</if>
+            <if test="orgName != null">#{orgName},</if>
+            <if test="orgAdminname != null">#{orgAdminname},</if>
+            <if test="orgTel != null">#{orgTel},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProjectorg" parameterType="Projectorg">
+        update projectorg
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null">ProjectId = #{projectId},</if>
+            <if test="categoryCode != null">CategoryCode = #{categoryCode},</if>
+            <if test="phaseCode != null">PhaseCode = #{phaseCode},</if>
+            <if test="orgCode != null">OrgCode = #{orgCode},</if>
+            <if test="orgName != null">OrgName = #{orgName},</if>
+            <if test="orgAdminname != null">OrgAdminName = #{orgAdminname},</if>
+            <if test="orgTel != null">OrgTel = #{orgTel},</if>
+        </trim>
+        where Rid = #{rid}
+    </update>
+
+    <delete id="deleteProjectorgById" parameterType="Long">
+        delete from projectorg where Rid = #{rid}
+    </delete>
+
+    <delete id="deleteProjectorgByIds" parameterType="String">
+        delete from projectorg where Rid in
+        <foreach item="rid" collection="array" open="(" separator="," close=")">
+            #{rid}
+        </foreach>
+    </delete>
+
+    <insert id="addProjectorg">
+        insert into projectOrg (OrgCode,OrgName) values
+        <foreach collection="sysDept"  item="item" separator=",">
+            (#{item.deptId},#{item.deptName})
+        </foreach>
+    </insert>
+
+    <insert id="insertProjectorgList" parameterType="List">
+        insert into projectorg (ProjectId,CategoryCode,PhaseCode,OrgCode,OrgName,OrgAdminName,OrgTel) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.projectId},#{item.categoryCode},#{item.phaseCode},#{item.orgCode},#{item.orgName},#{item.orgAdminname},#{item.orgTel})
+        </foreach>
+    </insert>
+
+    <delete id="deleteProjectorgList">
+        delete from projectorg where ProjectId = #{param1} and PhaseCode = #{param2};
+    </delete>
+
+    <select id="checkUnique" parameterType="ProjectOrg" resultType="int">
+        select count(*) from projectorg where ProjectId = #{projectId} and PhaseCode = #{phaseCode} and OrgCode = #{orgCode}
+    </select>
+</mapper>

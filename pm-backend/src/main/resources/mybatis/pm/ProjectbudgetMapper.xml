@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.pm.mapper.ProjectbudgetMapper">
+
+    <select id="selectProjectbudgetList" resultMap="ProjectbudgetResult">
+        SELECT pcbs.SubjectId,pcbs.SubjectName,pcbs.ParentSubjectId,pb.Rid,pb.ProjectId,pb.CategoryCode,pb.AppAmount,pb.MyAmount,pb.TotalAmount,pb.ReasonDesc
+        FROM projectcategorybudgetsubject pcbs
+        LEFT JOIN
+        projectbudget pb
+        ON
+        pcbs.CategoryCode = pb.CategoryCode AND pcbs.SubjectId = pb.SubjectId and PhaseCode = #{phaseCode} and ProjectId = #{projectId} and pcbs.Enabled = 1
+        WHERE
+        pcbs.CategoryCode = #{categoryCode} AND pcbs.Enabled = 1;
+    </select>
+
+    <resultMap type="ProjectbudgetVo" id="ProjectbudgetResult">
+        <result property="rid" column="Rid"/>
+        <result property="projectId" column="ProjectId"/>
+        <result property="categoryCode" column="CategoryCode"/>
+        <result property="phaseCode" column="PhaseCode"/>
+        <result property="subjectId" column="SubjectId"/>
+        <result property="subjectName" column="SubjectName"/>
+        <result property="parentSubjectId" column="ParentSubjectId"/>
+        <result property="appAmount" column="AppAmount"/>
+        <result property="myAmount" column="MyAmount"/>
+        <result property="totalAmount" column="TotalAmount"/>
+        <result property="reasonDesc" column="ReasonDesc"/>
+    </resultMap>
+
+    <sql id="selectProjectbudgetVo">
+        select Rid, ProjectId, CategoryCode, PhaseCode, SubjectId, AppAmount, MyAmount, TotalAmount, ReasonDesc from projectbudget
+    </sql>
+
+    <insert id="addProjectbudget" parameterType="projectbudgetVo">
+        insert into projectbudget (ProjectId,CategoryCode,PhaseCode,SubjectId,AppAmount,MyAmount,TotalAmount,ReasonDesc) values
+        <foreach collection="projectbudgetVo" item="item" separator=",">
+            (#{item.projectId},#{item.categoryCode},#{item.phaseCode},#{item.subjectId},#{item.appAmount},#{item.myAmount},#{item.totalAmount},#{item.reasonDesc})
+        </foreach>
+    </insert>
+
+    <delete id="deleteProjectbudget">
+        delete from projectbudget where ProjectId = #{projectId} and PhaseCode = #{phaseCode}
+    </delete>
+
+    <select id="selectProjectbudgets" resultType="Projectbudget">
+        <include refid="selectProjectbudgetVo"/>
+        where ProjectId = #{projectId} and PhaseCode = #{phaseCode}
+    </select>
+
+    <insert id="insertProjectbudgetList" parameterType="List">
+        insert into projectbudget (ProjectId,CategoryCode,PhaseCode,SubjectId,AppAmount,MyAmount,TotalAmount,ReasonDesc) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.projectId},#{item.categoryCode},#{item.phaseCode},#{item.subjectId},#{item.appAmount},
+            #{item.myAmount},#{item.totalAmount},#{item.reasonDesc})
+        </foreach>
+    </insert>
+
+
+    <delete id="deleteProjectbudgetList">
+        delete from projectbudget where ProjectId = #{param1} and PhaseCode = #{param2};
+    </delete>
+
+</mapper>

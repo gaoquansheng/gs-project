@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.pm.mapper.ProjectmeberMapper">
+
+    <resultMap type="Projectmeber" id="ProjectmeberResult">
+        <result property="rid"    column="Rid"    />
+        <result property="projectId"    column="ProjectId"    />
+        <result property="categoryCode"    column="CategoryCode"    />
+        <result property="phaseCode"    column="PhaseCode"    />
+        <result property="userCode"    column="UserCode"    />
+        <result property="userName"    column="UserName"    />
+        <result property="age"    column="Age"    />
+        <result property="sex"    column="Sex"    />
+        <result property="education"    column="Education"    />
+        <result property="title"    column="Title"    />
+        <result property="major"    column="Major"    />
+        <result property="workMonth"    column="WorkMonth"    />
+        <result property="task"    column="Task"    />
+        <result property="orgCode"    column="OrgCode"    />
+        <result property="orgName"    column="OrgName"    />
+        <result property="isLeader"    column="IsLeader"    />
+        <result property="orderNum"    column="OrderNum"    />
+    </resultMap>
+
+    <sql id="selectProjectmeberVo">
+        select Rid, ProjectId, CategoryCode, PhaseCode, UserCode, UserName, Age, Sex, Education, Title, Major, WorkMonth, Task, OrgCode, OrgName, IsLeader, OrderNum from projectmeber
+    </sql>
+
+    <select id="selectProjectmeberList" resultMap="ProjectmeberResult">
+        <include refid="selectProjectmeberVo"/>
+        <where>
+          ProjectId = #{projectId} and PhaseCode = #{phaseCode}
+        </where>
+    </select>
+
+    <select id="selectProjectmeberById" parameterType="Long" resultMap="ProjectmeberResult">
+        <include refid="selectProjectmeberVo"/>
+        where Rid = #{rid}
+    </select>
+
+    <insert id="insertProjectmeber" parameterType="Projectmeber" useGeneratedKeys="true" keyProperty="rid">
+        insert into projectmeber
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null">ProjectId,</if>
+            <if test="categoryCode != null">CategoryCode,</if>
+            <if test="phaseCode != null">PhaseCode,</if>
+            <if test="userCode != null">UserCode,</if>
+            <if test="userName != null">UserName,</if>
+            <if test="age != null">Age,</if>
+            <if test="sex != null">Sex,</if>
+            <if test="education != null">Education,</if>
+            <if test="title != null">Title,</if>
+            <if test="major != null">Major,</if>
+            <if test="workMonth != null">WorkMonth,</if>
+            <if test="task != null">Task,</if>
+            <if test="orgCode != null">OrgCode,</if>
+            <if test="orgName != null">OrgName,</if>
+            <if test="isLeader != null">IsLeader,</if>
+            <if test="orderNum != null">OrderNum,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null">#{projectId},</if>
+            <if test="categoryCode != null">#{categoryCode},</if>
+            <if test="phaseCode != null">#{phaseCode},</if>
+            <if test="userCode != null">#{userCode},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="age != null">#{age},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="education != null">#{education},</if>
+            <if test="title != null">#{title},</if>
+            <if test="major != null">#{major},</if>
+            <if test="workMonth != null">#{workMonth},</if>
+            <if test="task != null">#{task},</if>
+            <if test="orgCode != null">#{orgCode},</if>
+            <if test="orgName != null">#{orgName},</if>
+            <if test="isLeader != null">#{isLeader},</if>
+            <if test="orderNum != null">#{orderNum},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProjectmeber" parameterType="Projectmeber">
+        update projectmeber
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectId != null">ProjectId = #{projectId},</if>
+            <if test="categoryCode != null">CategoryCode = #{categoryCode},</if>
+            <if test="phaseCode != null">PhaseCode = #{phaseCode},</if>
+            <if test="userCode != null">UserCode = #{userCode},</if>
+            <if test="userName != null">UserName = #{userName},</if>
+            <if test="age != null">Age = #{age},</if>
+            <if test="sex != null">Sex = #{sex},</if>
+            <if test="education != null">Education = #{education},</if>
+            <if test="title != null">Title = #{title},</if>
+            <if test="major != null">Major = #{major},</if>
+            <if test="workMonth != null">WorkMonth = #{workMonth},</if>
+            <if test="task != null">Task = #{task},</if>
+            <if test="orgCode != null">OrgCode = #{orgCode},</if>
+            <if test="orgName != null">OrgName = #{orgName},</if>
+            <if test="isLeader != null">IsLeader = #{isLeader},</if>
+            <if test="orderNum != null">OrderNum = #{orderNum},</if>
+        </trim>
+        where Rid = #{rid}
+    </update>
+
+    <delete id="deleteProjectmeberById" parameterType="Long">
+        delete from projectmeber where Rid = #{rid}
+    </delete>
+
+    <delete id="deleteProjectmeberByIds" parameterType="String">
+        delete from projectmeber where Rid in
+        <foreach item="rid" collection="array" open="(" separator="," close=")">
+            #{rid}
+        </foreach>
+    </delete>
+
+    <insert id="addProjectmeber">
+        insert into projectmeber (UserCode,UserName,Sex,OrgCode,OrgName) values
+        <foreach collection="sysUser"  item="item" separator=",">
+            (#{item.userId},#{item.userName},#{item.sex},#{item.deptId},#{item.dept.deptName})
+        </foreach>
+    </insert>
+
+    <insert id="insertProjectmeberList" parameterType="List">
+        insert into projectmeber(ProjectId,CategoryCode,PhaseCode,UserCode,UserName,Age,Sex,Education,Title,Major,WorkMonth,Task,
+        OrgCode,OrgName,IsLeader,OrderNum) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.projectId},#{item.categoryCode},#{item.phaseCode},#{item.userCode},#{item.userName},#{item.age},#{item.sex},
+            #{item.education},#{item.title},#{item.major},#{item.workMonth},#{item.task},#{item.orgCode},#{item.orgName},
+            #{item.isLeader},#{item.orderNum})
+        </foreach>
+    </insert>
+
+    <delete id="deleteProjectmeberList">
+      delete from projectmeber where ProjectId = #{param1} and PhaseCode = #{param2}
+    </delete>
+
+    <select id="checkUnique" parameterType="Projectmeber" resultType="int">
+        select count(*) from projectmeber where ProjectId = #{projectId} and PhaseCode = #{phaseCode} and UserCode = #{userCode}
+    </select>
+</mapper>

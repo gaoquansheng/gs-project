@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.pm.mapper.WorkTipsMapper">
+
+    <resultMap type="WorkTips" id="WorkTipsResult">
+        <result property="rId" column="Rid"/>
+        <result property="openYear" column="OpenYear"/>
+        <result property="startTime" column="StartTime"/>
+        <result property="endTime" column="EndTime"/>
+        <result property="phaseCode" column="PhaseCode"/>
+        <result property="categoryCode" column="CategoryCode"/>
+        <result property="projectId" column="ProjectId"/>
+        <result property="projectStatus" column="ProjectStatus"/>
+        <result property="categoryName" column="CategoryName"/>
+        <result property="projectYear" column="ProjectYear"/>
+        <result property="phaseName" column="PhaseName"/>
+        <result property="projectName" column="ProjectName"/>
+    </resultMap>
+
+
+    <select id="selectWorkTipsList" parameterType="String" resultMap="WorkTipsResult">
+SELECT
+	ot.*,
+	p.Projectid,
+	p.ProjectStatus,
+	pc.CategoryName,
+	projectyear,
+	p.ProjectName,
+	wf.PhaseName
+FROM
+	opentime ot
+	INNER JOIN projectcategory pc ON ( pc.CategoryCode = ot.CategoryCode AND sysdate() BETWEEN StartTime AND EndTime )
+	LEFT JOIN workflowphase wf ON wf.PhaseCode = ot.PhaseCode
+	LEFT JOIN project p ON p.CategoryCode = pc.CategoryCode
+	AND UserName = #{userName}
+	AND projectyear = OpenYear
+    </select>
+
+
+</mapper>

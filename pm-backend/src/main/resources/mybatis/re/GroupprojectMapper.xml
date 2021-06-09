@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.re.mapper.GroupprojectMapper">
+    
+    <resultMap type="Groupproject" id="GroupprojectResult">
+        <result property="rid"    column="Rid"    />
+        <result property="groupId"    column="GroupId"    />
+        <result property="projectId"    column="ProjectId"    />
+    </resultMap>
+
+    <sql id="selectGroupprojectVo">
+        select Rid, GroupId, ProjectId from groupproject
+    </sql>
+
+    <select id="selectGroupprojectList" parameterType="Groupproject" resultMap="GroupprojectResult">
+        <include refid="selectGroupprojectVo"/>
+        <where>  
+        </where>
+    </select>
+    
+    <select id="selectGroupprojectById" parameterType="Long" resultMap="GroupprojectResult">
+        <include refid="selectGroupprojectVo"/>
+        where Rid = #{rid}
+    </select>
+        
+    <insert id="insertGroupproject" parameterType="Groupproject" useGeneratedKeys="true" keyProperty="rid">
+        insert into groupproject
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="groupId != null">GroupId,</if>
+            <if test="projectId != null">ProjectId,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="groupId != null">#{groupId},</if>
+            <if test="projectId != null">#{projectId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGroupproject" parameterType="Groupproject">
+        update groupproject
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="groupId != null">GroupId = #{groupId},</if>
+            <if test="projectId != null">ProjectId = #{projectId},</if>
+        </trim>
+        where Rid = #{rid}
+    </update>
+
+    <delete id="deleteGroupprojectById" parameterType="Long">
+        delete from groupproject where Rid = #{rid}
+    </delete>
+
+    <delete id="deleteGroupprojectByIds" parameterType="String">
+        delete from groupproject where Rid in 
+        <foreach item="rid" collection="array" open="(" separator="," close=")">
+            #{rid}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.pm.mapper.ProjecttaskMapper">
+    
+    <resultMap type="Projecttask" id="ProjecttaskResult">
+        <result property="projectId"    column="ProjectId"    />
+        <result property="categoryCode"    column="CategoryCode"    />
+        <result property="projectCode"    column="ProjectCode"    />
+        <result property="projectName"    column="ProjectName"    />
+        <result property="projectYear"    column="ProjectYear"    />
+        <result property="userCode"    column="UserCode"    />
+        <result property="userName"    column="UserName"    />
+        <result property="proxyOrgCode"    column="proxyOrgCode"    />
+        <result property="proxyOrgName"    column="proxyOrgName"    />
+        <result property="myOrgCode"    column="MyOrgCode"    />
+        <result property="myOrgName"    column="MyOrgName"    />
+        <result property="projectArear"    column="ProjectArear"    />
+        <result property="moneyFrom"    column="MoneyFrom"    />
+        <result property="projectPriority"    column="ProjectPriority"    />
+        <result property="startDate"    column="StartDate"    />
+        <result property="endDate"    column="EndDate"    />
+        <result property="appTime"    column="AppTime"    />
+        <result property="appAmount"    column="AppAmount"    />
+        <result property="myAmount"    column="MyAmount"    />
+        <result property="totalAmount"    column="TotalAmount"    />
+        <result property="projectStatus"    column="ProjectStatus"    />
+        <result property="projectSummary"    column="ProjectSummary"    />
+        <result property="keyWords"    column="KeyWords"    />
+        <result property="pdfPath"    column="PdfPath"    />
+        <result property="projecttype1"    column="ProjectType1"    />
+        <result property="projecttype2"    column="ProjectType2"    />
+        <result property="projecttype3"    column="ProjectType3"    />
+        <result property="projecttype4"    column="ProjectType4"    />
+        <result property="projecttype5"    column="ProjectType5"    />
+    </resultMap>
+
+    <sql id="selectProjecttaskVo">
+        select ProjectId, CategoryCode, ProjectCode, ProjectName, ProjectYear, UserCode, UserName, proxyOrgCode, proxyOrgName, MyOrgCode, MyOrgName, ProjectArear, MoneyFrom, ProjectPriority, StartDate, EndDate, AppTime, AppAmount, MyAmount, TotalAmount, ProjectStatus, ProjectSummary, KeyWords, PdfPath, ProjectType1, ProjectType2, ProjectType3, ProjectType4, ProjectType5 from projecttask
+    </sql>
+
+    <select id="selectProjecttaskList" parameterType="Projecttask" resultMap="ProjecttaskResult">
+        <include refid="selectProjecttaskVo"/>
+        <where>  
+            <if test="categoryCode != null  and categoryCode != ''"> and CategoryCode = #{categoryCode}</if>
+            <if test="projectCode != null  and projectCode != ''"> and ProjectCode = #{projectCode}</if>
+            <if test="projectName != null  and projectName != ''"> and ProjectName like concat('%', #{projectName}, '%')</if>
+            <if test="projectYear != null "> and ProjectYear = #{projectYear}</if>
+            <if test="userCode != null  and userCode != ''"> and UserCode = #{userCode}</if>
+            <if test="userName != null  and userName != ''"> and UserName like concat('%', #{userName}, '%')</if>
+            <if test="proxyOrgCode != null  and proxyOrgCode != ''"> and proxyOrgCode = #{proxyOrgCode}</if>
+            <if test="proxyOrgName != null  and proxyOrgName != ''"> and proxyOrgName like concat('%', #{proxyOrgName}, '%')</if>
+            <if test="myOrgCode != null  and myOrgCode != ''"> and MyOrgCode = #{myOrgCode}</if>
+            <if test="myOrgName != null  and myOrgName != ''"> and MyOrgName like concat('%', #{myOrgName}, '%')</if>
+            <if test="projectArear != null  and projectArear != ''"> and ProjectArear = #{projectArear}</if>
+            <if test="moneyFrom != null  and moneyFrom != ''"> and MoneyFrom = #{moneyFrom}</if>
+            <if test="projectPriority != null  and projectPriority != ''"> and ProjectPriority = #{projectPriority}</if>
+            <if test="startDate != null "> and StartDate = #{startDate}</if>
+            <if test="endDate != null "> and EndDate = #{endDate}</if>
+            <if test="appTime != null "> and AppTime = #{appTime}</if>
+            <if test="appAmount != null "> and AppAmount = #{appAmount}</if>
+            <if test="myAmount != null "> and MyAmount = #{myAmount}</if>
+            <if test="totalAmount != null "> and TotalAmount = #{totalAmount}</if>
+            <if test="projectStatus != null  and projectStatus != ''"> and ProjectStatus = #{projectStatus}</if>
+            <if test="projectSummary != null  and projectSummary != ''"> and ProjectSummary = #{projectSummary}</if>
+            <if test="keyWords != null  and keyWords != ''"> and KeyWords = #{keyWords}</if>
+            <if test="pdfPath != null  and pdfPath != ''"> and PdfPath = #{pdfPath}</if>
+            <if test="projecttype1 != null  and projecttype1 != ''"> and ProjectType1 = #{projecttype1}</if>
+            <if test="projecttype2 != null  and projecttype2 != ''"> and ProjectType2 = #{projecttype2}</if>
+            <if test="projecttype3 != null  and projecttype3 != ''"> and ProjectType3 = #{projecttype3}</if>
+            <if test="projecttype4 != null  and projecttype4 != ''"> and ProjectType4 = #{projecttype4}</if>
+            <if test="projecttype5 != null  and projecttype5 != ''"> and ProjectType5 = #{projecttype5}</if>
+        </where>
+    </select>
+    
+    <select id="selectProjecttaskById" parameterType="Long" resultMap="ProjecttaskResult">
+        <include refid="selectProjecttaskVo"/>
+        where ProjectId = #{projectId}
+    </select>
+        
+    <insert id="insertProjecttask" parameterType="Projecttask">
+        insert into projecttask
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null">ProjectId,</if>
+            <if test="categoryCode != null">CategoryCode,</if>
+            <if test="projectCode != null">ProjectCode,</if>
+            <if test="projectName != null">ProjectName,</if>
+            <if test="projectYear != null">ProjectYear,</if>
+            <if test="userCode != null">UserCode,</if>
+            <if test="userName != null">UserName,</if>
+            <if test="proxyOrgCode != null">proxyOrgCode,</if>
+            <if test="proxyOrgName != null">proxyOrgName,</if>
+            <if test="myOrgCode != null">MyOrgCode,</if>
+            <if test="myOrgName != null">MyOrgName,</if>
+            <if test="projectArear != null">ProjectArear,</if>
+            <if test="moneyFrom != null">MoneyFrom,</if>
+            <if test="projectPriority != null">ProjectPriority,</if>
+            <if test="startDate != null">StartDate,</if>
+            <if test="endDate != null">EndDate,</if>
+            <if test="appTime != null">AppTime,</if>
+            <if test="appAmount != null">AppAmount,</if>
+            <if test="myAmount != null">MyAmount,</if>
+            <if test="totalAmount != null">TotalAmount,</if>
+            <if test="projectStatus != null">ProjectStatus,</if>
+            <if test="projectSummary != null">ProjectSummary,</if>
+            <if test="keyWords != null">KeyWords,</if>
+            <if test="pdfPath != null">PdfPath,</if>
+            <if test="projecttype1 != null">ProjectType1,</if>
+            <if test="projecttype2 != null">ProjectType2,</if>
+            <if test="projecttype3 != null">ProjectType3,</if>
+            <if test="projecttype4 != null">ProjectType4,</if>
+            <if test="projecttype5 != null">ProjectType5,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null">#{projectId},</if>
+            <if test="categoryCode != null">#{categoryCode},</if>
+            <if test="projectCode != null">#{projectCode},</if>
+            <if test="projectName != null">#{projectName},</if>
+            <if test="projectYear != null">#{projectYear},</if>
+            <if test="userCode != null">#{userCode},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="proxyOrgCode != null">#{proxyOrgCode},</if>
+            <if test="proxyOrgName != null">#{proxyOrgName},</if>
+            <if test="myOrgCode != null">#{myOrgCode},</if>
+            <if test="myOrgName != null">#{myOrgName},</if>
+            <if test="projectArear != null">#{projectArear},</if>
+            <if test="moneyFrom != null">#{moneyFrom},</if>
+            <if test="projectPriority != null">#{projectPriority},</if>
+            <if test="startDate != null">#{startDate},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="appTime != null">#{appTime},</if>
+            <if test="appAmount != null">#{appAmount},</if>
+            <if test="myAmount != null">#{myAmount},</if>
+            <if test="totalAmount != null">#{totalAmount},</if>
+            <if test="projectStatus != null">#{projectStatus},</if>
+            <if test="projectSummary != null">#{projectSummary},</if>
+            <if test="keyWords != null">#{keyWords},</if>
+            <if test="pdfPath != null">#{pdfPath},</if>
+            <if test="projecttype1 != null">#{projecttype1},</if>
+            <if test="projecttype2 != null">#{projecttype2},</if>
+            <if test="projecttype3 != null">#{projecttype3},</if>
+            <if test="projecttype4 != null">#{projecttype4},</if>
+            <if test="projecttype5 != null">#{projecttype5},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProjecttask" parameterType="Projecttask">
+        update projecttask
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="categoryCode != null">CategoryCode = #{categoryCode},</if>
+            <if test="projectCode != null">ProjectCode = #{projectCode},</if>
+            <if test="projectName != null">ProjectName = #{projectName},</if>
+            <if test="projectYear != null">ProjectYear = #{projectYear},</if>
+            <if test="userCode != null">UserCode = #{userCode},</if>
+            <if test="userName != null">UserName = #{userName},</if>
+            <if test="proxyOrgCode != null">proxyOrgCode = #{proxyOrgCode},</if>
+            <if test="proxyOrgName != null">proxyOrgName = #{proxyOrgName},</if>
+            <if test="myOrgCode != null">MyOrgCode = #{myOrgCode},</if>
+            <if test="myOrgName != null">MyOrgName = #{myOrgName},</if>
+            <if test="projectArear != null">ProjectArear = #{projectArear},</if>
+            <if test="moneyFrom != null">MoneyFrom = #{moneyFrom},</if>
+            <if test="projectPriority != null">ProjectPriority = #{projectPriority},</if>
+            <if test="startDate != null">StartDate = #{startDate},</if>
+            <if test="endDate != null">EndDate = #{endDate},</if>
+            <if test="appTime != null">AppTime = #{appTime},</if>
+            <if test="appAmount != null">AppAmount = #{appAmount},</if>
+            <if test="myAmount != null">MyAmount = #{myAmount},</if>
+            <if test="totalAmount != null">TotalAmount = #{totalAmount},</if>
+            <if test="projectStatus != null">ProjectStatus = #{projectStatus},</if>
+            <if test="projectSummary != null">ProjectSummary = #{projectSummary},</if>
+            <if test="keyWords != null">KeyWords = #{keyWords},</if>
+            <if test="pdfPath != null">PdfPath = #{pdfPath},</if>
+            <if test="projecttype1 != null">ProjectType1 = #{projecttype1},</if>
+            <if test="projecttype2 != null">ProjectType2 = #{projecttype2},</if>
+            <if test="projecttype3 != null">ProjectType3 = #{projecttype3},</if>
+            <if test="projecttype4 != null">ProjectType4 = #{projecttype4},</if>
+            <if test="projecttype5 != null">ProjectType5 = #{projecttype5},</if>
+        </trim>
+        where ProjectId = #{projectId}
+    </update>
+
+    <delete id="deleteProjecttaskById" parameterType="Long">
+        delete from projecttask where ProjectId = #{projectId}
+    </delete>
+
+    <delete id="deleteProjecttaskByIds" parameterType="String">
+        delete from projecttask where ProjectId in 
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </delete>
+    
+</mapper>

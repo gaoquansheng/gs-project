@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.pm.mapper.ProjectyearbudgetplanMapper">
+
+    <resultMap type="Projectyearbudgetplan" id="ProjectyearbudgetplanResult">
+        <result property="rid"    column="Rid"    />
+        <result property="categoryCode"    column="CategoryCode"    />
+        <result property="phaseCode"    column="PhaseCode"    />
+        <result property="projectId"    column="ProjectId"    />
+        <result property="budgetYear"    column="BudgetYear"    />
+        <result property="centralAmountBudget"    column="CentralAmountBudget"    />
+        <result property="localAmountBudget"    column="LocalAmountBudget"    />
+        <result property="myAmountBudget"    column="MyAmountBudget"    />
+        <result property="totalAmountBudget"    column="TotalAmountBudget"    />
+        <result property="appBudgetPercent"    column="AppBudgetPercent"    />
+        <result property="totalBudgetPercent"    column="TotalBudgetPercent"    />
+    </resultMap>
+
+    <sql id="selectProjectyearbudgetplanVo">
+        select Rid, CategoryCode, PhaseCode, ProjectId, BudgetYear, CentralAmountBudget, LocalAmountBudget, MyAmountBudget, TotalAmountBudget, AppBudgetPercent, TotalBudgetPercent from projectyearbudgetplan
+    </sql>
+
+    <select id="selectProjectyearbudgetplanList" resultMap="ProjectyearbudgetplanResult">
+        <include refid="selectProjectyearbudgetplanVo"/>
+        <where>
+          ProjectId = #{projectId} and PhaseCode = #{phaseCode}
+        </where>
+    </select>
+
+    <select id="selectProjectyearbudgetplanById" parameterType="Long" resultMap="ProjectyearbudgetplanResult">
+        <include refid="selectProjectyearbudgetplanVo"/>
+        where Rid = #{rid}
+    </select>
+
+    <insert id="insertProjectyearbudgetplan" parameterType="Projectyearbudgetplan">
+        insert into projectyearbudgetplan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="rid != null">Rid,</if>
+            <if test="categoryCode != null">CategoryCode,</if>
+            <if test="phaseCode != null">PhaseCode,</if>
+            <if test="projectId != null">ProjectId,</if>
+            <if test="budgetYear != null">BudgetYear,</if>
+            <if test="centralAmountBudget != null">CentralAmountBudget,</if>
+            <if test="localAmountBudget != null">LocalAmountBudget,</if>
+            <if test="myAmountBudget != null">MyAmountBudget,</if>
+            <if test="totalAmountBudget != null">TotalAmountBudget,</if>
+            <if test="appBudgetPercent != null">AppBudgetPercent,</if>
+            <if test="totalBudgetPercent != null">TotalBudgetPercent,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rid != null">#{rid},</if>
+            <if test="categoryCode != null">#{categoryCode},</if>
+            <if test="phaseCode != null">#{phaseCode},</if>
+            <if test="projectId != null">#{projectId},</if>
+            <if test="budgetYear != null">#{budgetYear},</if>
+            <if test="centralAmountBudget != null">#{centralAmountBudget},</if>
+            <if test="localAmountBudget != null">#{localAmountBudget},</if>
+            <if test="myAmountBudget != null">#{myAmountBudget},</if>
+            <if test="totalAmountBudget != null">#{totalAmountBudget},</if>
+            <if test="appBudgetPercent != null">#{appBudgetPercent},</if>
+            <if test="totalBudgetPercent != null">#{totalBudgetPercent},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProjectyearbudgetplan" parameterType="Projectyearbudgetplan">
+        update projectyearbudgetplan
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="categoryCode != null">CategoryCode = #{categoryCode},</if>
+            <if test="phaseCode != null">PhaseCode = #{phaseCode},</if>
+            <if test="projectId != null">ProjectId = #{projectId},</if>
+            <if test="budgetYear != null">BudgetYear = #{budgetYear},</if>
+            <if test="centralAmountBudget != null">CentralAmountBudget = #{centralAmountBudget},</if>
+            <if test="localAmountBudget != null">LocalAmountBudget = #{localAmountBudget},</if>
+            <if test="myAmountBudget != null">MyAmountBudget = #{myAmountBudget},</if>
+            <if test="totalAmountBudget != null">TotalAmountBudget = #{totalAmountBudget},</if>
+            <if test="appBudgetPercent != null">AppBudgetPercent = #{appBudgetPercent},</if>
+            <if test="totalBudgetPercent != null">TotalBudgetPercent = #{totalBudgetPercent},</if>
+        </trim>
+        where Rid = #{rid}
+    </update>
+
+    <delete id="deleteProjectyearbudgetplanById" parameterType="Long">
+        delete from projectyearbudgetplan where Rid = #{rid}
+    </delete>
+
+    <delete id="deleteProjectyearbudgetplanByIds" parameterType="String">
+        delete from projectyearbudgetplan where Rid in
+        <foreach item="rid" collection="array" open="(" separator="," close=")">
+            #{rid}
+        </foreach>
+    </delete>
+
+    <select id="checkUnique" resultType="int">
+        select count(*) from projectyearbudgetplan where BudgetYear = #{year} and ProjectId = #{projectId} and PhaseCode = #{phaseCode}
+    </select>
+
+    <insert id="insertProjectyearbudgetplanList" parameterType="List">
+        insert into projectyearbudgetplan (ProjectId,CategoryCode,PhaseCode,BudgetYear,CentralAmountBudget,LocalAmountBudget, MyAmountBudget,
+        TotalAmountBudget,AppBudgetPercent,TotalBudgetPercent) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.projectId},#{item.categoryCode},#{item.phaseCode},#{item.budgetYear},#{item.centralAmountBudget},#{item.localAmountBudget}
+            #{item.myAmountBudget},#{item.totalAmountBudget},#{item.appBudgetPercent},#{item.totalBudgetPercent})
+        </foreach>
+    </insert>
+
+    <delete id="deleteProjectyearbudgetplanList">
+        delete from projectyearbudgetplan where ProjectId = #{param1} and PhaseCode = #{param2};
+    </delete>
+</mapper>

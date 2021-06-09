@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.pc.mapper.ProjectcategorybudgetsubjectMapper">
+
+    <resultMap type="Projectcategorybudgetsubject" id="ProjectcategorybudgetsubjectResult">
+        <result property="subjectId"    column="SubjectId"    />
+        <result property="subjectName"    column="SubjectName"    />
+        <result property="categoryCode"    column="CategoryCode"    />
+        <result property="enabled"    column="Enabled"    />
+        <result property="parentSubjectId"    column="ParentSubjectId"    />
+        <result property="subjectDesc"    column="SubjectDesc"    />
+    </resultMap>
+
+    <sql id="selectProjectcategorybudgetsubjectVo">
+        select SubjectId, SubjectName, CategoryCode, Enabled, ParentSubjectId, SubjectDesc from projectcategorybudgetsubject
+    </sql>
+
+    <select id="selectProjectcategorybudgetsubjectList" parameterType="Projectcategorybudgetsubject" resultMap="ProjectcategorybudgetsubjectResult">
+        <include refid="selectProjectcategorybudgetsubjectVo"/>
+        <where>
+            <if test="categoryCode != null  and categoryCode != ''"> and CategoryCode = #{categoryCode}</if>
+        </where>
+    </select>
+
+    <select id="selectProjectcategorybudgetsubjectById" parameterType="Long" resultMap="ProjectcategorybudgetsubjectResult">
+        <include refid="selectProjectcategorybudgetsubjectVo"/>
+        where SubjectId = #{subjectId}
+    </select>
+
+    <insert id="insertProjectcategorybudgetsubject" parameterType="Projectcategorybudgetsubject" useGeneratedKeys="true" keyProperty="subjectId">
+        insert into projectcategorybudgetsubject
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="subjectName != null and subjectName != ''">SubjectName,</if>
+            <if test="categoryCode != null and categoryCode != ''">CategoryCode,</if>
+            <if test="enabled != null">Enabled,</if>
+            <if test="parentSubjectId != null">ParentSubjectId,</if>
+            <if test="subjectDesc != null">SubjectDesc,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="subjectName != null and subjectName != ''">#{subjectName},</if>
+            <if test="categoryCode != null and categoryCode != ''">#{categoryCode},</if>
+            <if test="enabled != null">#{enabled},</if>
+            <if test="parentSubjectId != null">#{parentSubjectId},</if>
+            <if test="subjectDesc != null">#{subjectDesc},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProjectcategorybudgetsubject" parameterType="Projectcategorybudgetsubject">
+        update projectcategorybudgetsubject
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="subjectName != null and subjectName != ''">SubjectName = #{subjectName},</if>
+            <if test="categoryCode != null and categoryCode != ''">CategoryCode = #{categoryCode},</if>
+            <if test="enabled != null">Enabled = #{enabled},</if>
+            <if test="parentSubjectId != null">ParentSubjectId = #{parentSubjectId},</if>
+            <if test="subjectDesc != null">SubjectDesc = #{subjectDesc},</if>
+        </trim>
+        where SubjectId = #{subjectId}
+<!--        update projectcategorybudgetsubject-->
+<!--        <trim prefix="SET" suffixOverrides=",">-->
+<!--            <if test="enabled != null">Enabled = #{enabled},</if>-->
+<!--        </trim>-->
+<!--        where parentSubjectId = #{subjectId}-->
+    </update>
+
+    <delete id="deleteProjectcategorybudgetsubjectById" parameterType="Long">
+        delete from projectcategorybudgetsubject where SubjectId = #{subjectId}
+    </delete>
+
+    <delete id="deleteProjectcategorybudgetsubjectByIds" parameterType="String">
+        delete from projectcategorybudgetsubject where SubjectId in
+        <foreach item="subjectId" collection="array" open="(" separator="," close=")">
+            #{subjectId}
+        </foreach>
+    </delete>
+
+</mapper>

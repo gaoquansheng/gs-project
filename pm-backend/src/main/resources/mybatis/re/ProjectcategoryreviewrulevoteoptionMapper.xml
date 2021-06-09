@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.re.mapper.ProjectcategoryreviewrulevoteoptionMapper">
+
+    <resultMap type="Projectcategoryreviewrulevoteoption" id="ProjectcategoryreviewrulevoteoptionResult">
+        <result property="optionId" column="OptionId"/>
+        <result property="categoryCode" column="CategoryCode"/>
+        <result property="phaseCode" column="PhaseCode"/>
+        <result property="optionTitle" column="OptionTitle"/>
+    </resultMap>
+
+    <sql id="selectProjectcategoryreviewrulevoteoptionVo">
+        select OptionId, CategoryCode, PhaseCode, OptionTitle from projectcategoryreviewrulevoteoption
+    </sql>
+
+    <select id="selectVoteByCcPc" resultMap="ProjectcategoryreviewrulevoteoptionResult">
+        select * from projectcategoryreviewrulevoteoption where CategoryCode = #{categoryCode} and PhaseCode = #{phaseCode}
+    </select>
+
+    <select id="selectProjectcategoryreviewrulevoteoptionList" parameterType="Projectcategoryreviewrulevoteoption"
+            resultMap="ProjectcategoryreviewrulevoteoptionResult">
+        <include refid="selectProjectcategoryreviewrulevoteoptionVo"/>
+        <where>
+            <if test="categoryCode != null  and categoryCode != ''">and CategoryCode = #{categoryCode}</if>
+            <if test="phaseCode != null  and phaseCode != ''">and PhaseCode = #{phaseCode}</if>
+            <if test="optionTitle != null  and optionTitle != ''">and OptionTitle = #{optionTitle}</if>
+        </where>
+    </select>
+
+    <select id="selectProjectcategoryreviewrulevoteoptionById" parameterType="Long"
+            resultMap="ProjectcategoryreviewrulevoteoptionResult">
+        <include refid="selectProjectcategoryreviewrulevoteoptionVo"/>
+        where OptionId = #{optionId}
+    </select>
+
+    <insert id="insertProjectcategoryreviewrulevoteoption" parameterType="Projectcategoryreviewrulevoteoption"
+            useGeneratedKeys="true" keyProperty="optionId">
+        insert into projectcategoryreviewrulevoteoption
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="categoryCode != null and categoryCode != ''">CategoryCode,</if>
+            <if test="phaseCode != null and phaseCode != ''">PhaseCode,</if>
+            <if test="optionTitle != null and optionTitle != ''">OptionTitle,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="categoryCode != null and categoryCode != ''">#{categoryCode},</if>
+            <if test="phaseCode != null and phaseCode != ''">#{phaseCode},</if>
+            <if test="optionTitle != null and optionTitle != ''">#{optionTitle},</if>
+        </trim>
+    </insert>
+
+    <update id="updateProjectcategoryreviewrulevoteoption" parameterType="Projectcategoryreviewrulevoteoption">
+        update projectcategoryreviewrulevoteoption
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="categoryCode != null and categoryCode != ''">CategoryCode = #{categoryCode},</if>
+            <if test="phaseCode != null and phaseCode != ''">PhaseCode = #{phaseCode},</if>
+            <if test="optionTitle != null and optionTitle != ''">OptionTitle = #{optionTitle},</if>
+        </trim>
+        where OptionId = #{optionId}
+    </update>
+
+    <delete id="deleteProjectcategoryreviewrulevoteoptionById" parameterType="Long">
+        delete from projectcategoryreviewrulevoteoption where OptionId = #{optionId}
+    </delete>
+
+    <delete id="deleteProjectcategoryreviewrulevoteoptionByIds" parameterType="String">
+        delete from projectcategoryreviewrulevoteoption where OptionId in
+        <foreach item="optionId" collection="array" open="(" separator="," close=")">
+            #{optionId}
+        </foreach>
+    </delete>
+
+</mapper>

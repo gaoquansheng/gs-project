@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.re.mapper.GroupexpertMapper">
+    
+    <resultMap type="Groupexpert" id="GroupexpertResult">
+        <result property="rid"    column="Rid"    />
+        <result property="groupId"    column="GroupId"    />
+        <result property="expertUserCode"    column="ExpertUserCode"    />
+        <result property="expertUserName"    column="ExpertUserName"    />
+        <result property="expertRole"    column="ExpertRole"    />
+    </resultMap>
+
+    <sql id="selectGroupexpertVo">
+        select Rid, GroupId, ExpertUserCode, ExpertUserName, ExpertRole from groupexpert
+    </sql>
+
+    <select id="selectGroupexpertList" parameterType="Groupexpert" resultMap="GroupexpertResult">
+        <include refid="selectGroupexpertVo"/>
+        <where>  
+            <if test="expertUserName != null  and expertUserName != ''"> and ExpertUserName like concat('%', #{expertUserName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectGroupexpertById" parameterType="Long" resultMap="GroupexpertResult">
+        <include refid="selectGroupexpertVo"/>
+        where Rid = #{rid}
+    </select>
+        
+    <insert id="insertGroupexpert" parameterType="Groupexpert" useGeneratedKeys="true" keyProperty="rid">
+        insert into groupexpert
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="groupId != null">GroupId,</if>
+            <if test="expertUserCode != null">ExpertUserCode,</if>
+            <if test="expertUserName != null">ExpertUserName,</if>
+            <if test="expertRole != null">ExpertRole,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="groupId != null">#{groupId},</if>
+            <if test="expertUserCode != null">#{expertUserCode},</if>
+            <if test="expertUserName != null">#{expertUserName},</if>
+            <if test="expertRole != null">#{expertRole},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGroupexpert" parameterType="Groupexpert">
+        update groupexpert
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="groupId != null">GroupId = #{groupId},</if>
+            <if test="expertUserCode != null">ExpertUserCode = #{expertUserCode},</if>
+            <if test="expertUserName != null">ExpertUserName = #{expertUserName},</if>
+            <if test="expertRole != null">ExpertRole = #{expertRole},</if>
+        </trim>
+        where Rid = #{rid}
+    </update>
+
+    <delete id="deleteGroupexpertById" parameterType="Long">
+        delete from groupexpert where Rid = #{rid}
+    </delete>
+
+    <delete id="deleteGroupexpertByIds" parameterType="String">
+        delete from groupexpert where Rid in 
+        <foreach item="rid" collection="array" open="(" separator="," close=")">
+            #{rid}
+        </foreach>
+    </delete>
+    
+</mapper>

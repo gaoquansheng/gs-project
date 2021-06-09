@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.pc.mapper.ProjectcategoryphaseMapper">
+
+    <resultMap type="Projectcategoryphase" id="ProjectcategoryphaseResult">
+        <result property="categoryCode"    column="CategoryCode"    />
+        <result property="phaseCode"    column="PhaseCode"    />
+        <result property="phaseName"    column="PhaseName"    />
+        <result property="needWord"    column="NeedWord"    />
+        <result property="wordPath"    column="WordPath"    />
+        <result property="refFilePath"    column="RefFilePath"    />
+        <result property="needReview"    column="NeedReview"    />
+        <result property="enabled"    column="Enabled"    />
+        <result property="parentCode"    column="ParentCode"    />
+    </resultMap>
+
+    <sql id="selectProjectcategoryphaseVo">
+        select CategoryCode, PhaseCode, PhaseName, NeedWord, WordPath, RefFilePath, NeedReview, Enabled, ParentCode from projectcategoryphase
+    </sql>
+
+    <select id="selectProjectcategoryphaseList" parameterType="Projectcategoryphase" resultMap="ProjectcategoryphaseResult">
+        <include refid="selectProjectcategoryphaseVo"/>
+        <where>
+        <if test="categoryCode != null"> CategoryCode = #{categoryCode}</if>
+        <if test="enabled != null">and Enabled = #{enabled}</if>
+        <if test="needWord != null">and NeedWord = #{needWord}</if>
+        </where>
+    </select>
+
+
+    <insert id="insertProjectcategoryphase">
+        insert into projectcategoryphase (CategoryCode,PhaseCode,PhaseName,ParentCode,NeedWord,Enabled,NeedReview) values
+         <foreach collection="workflowphases"  item="item" separator=",">
+            (#{categoryCode},#{item.phaseCode},#{item.phaseName},#{item.parentCode},0,1,0)
+         </foreach>
+    </insert>
+
+<!--    这里留一个批量更新-->
+    <update id="updateProjectcategoryphase" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update projectcategoryphase
+            <set>
+                <if test="item.enabled != null"> Enabled = #{item.enabled},</if>
+                <if test="item.needWord != null">NeedWord = #{item.needWord},</if>
+                <if test="item.wordPath != null">WordPath = #{item.wordPath},</if>
+                <if test="item.refFilePath != null">RefFilePath = #{item.refFilePath},</if>
+                <if test="item.needReview != null">NeedReview = #{item.needReview}</if>
+            </set>
+            <where>
+                CategoryCode = #{item.categoryCode} and PhaseCode = #{item.phaseCode}
+            </where>
+        </foreach>
+    </update>
+
+    <delete id="deleteProjectcategoryphaseById" parameterType="String">
+        delete from projectcategoryphase where CategoryCode = #{categoryCode}
+    </delete>
+
+    <delete id="deleteProjectcategoryphaseByIds" parameterType="String">
+        delete from projectcategoryphase where CategoryCode in
+        <foreach item="categoryCode" collection="array" open="(" separator="," close=")">
+            #{categoryCode}
+        </foreach>
+    </delete>
+
+
+    <select id="selectProjectcategoryphaseById" resultMap="ProjectcategoryphaseResult">
+        select CategoryCode, PhaseCode, PhaseName, NeedWord, WordPath, RefFilePath, NeedReview, Enabled, ParentCode
+        from projectcategoryphase
+        where CategoryCode = #{categoryCode} and PhaseCode = #{phaseCode}
+    </select>
+</mapper>

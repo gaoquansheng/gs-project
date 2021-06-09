@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.pm.mapper.ExpertMapper">
+    
+    <resultMap type="Expert" id="ExpertResult">
+        <result property="expertid"    column="expertId"    />
+        <result property="name"    column="name"    />
+        <result property="sex"    column="sex"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="jobTitle"    column="job_title"    />
+        <result property="work"    column="work"    />
+        <result property="phone"    column="phone"    />
+        <result property="specialty"    column="specialty"    />
+        <result property="email"    column="email"    />
+        <result property="address"    column="address"    />
+        <result property="idCard"    column="id_card"    />
+    </resultMap>
+
+    <sql id="selectExpertVo">
+        select expertId, name, sex, birthday, job_title, work, phone, specialty, email, address, id_card from expert
+    </sql>
+
+    <select id="selectExpertList" parameterType="Expert" resultMap="ExpertResult">
+        <include refid="selectExpertVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="specialty != null "> and specialty = #{specialty}</if>
+        </where>
+    </select>
+    
+    <select id="selectExpertById" parameterType="Long" resultMap="ExpertResult">
+        <include refid="selectExpertVo"/>
+        where expertId = #{expertid}
+    </select>
+        
+    <insert id="insertExpert" parameterType="Expert" useGeneratedKeys="true" keyProperty="expertid">
+        insert into expert
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="sex != null">sex,</if>
+            <if test="birthday != null">birthday,</if>
+            <if test="jobTitle != null and jobTitle != ''">job_title,</if>
+            <if test="work != null and work != ''">work,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="specialty != null">specialty,</if>
+            <if test="email != null and email != ''">email,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="idCard != null and idCard != ''">id_card,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="birthday != null">#{birthday},</if>
+            <if test="jobTitle != null and jobTitle != ''">#{jobTitle},</if>
+            <if test="work != null and work != ''">#{work},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="specialty != null">#{specialty},</if>
+            <if test="email != null and email != ''">#{email},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="idCard != null and idCard != ''">#{idCard},</if>
+         </trim>
+    </insert>
+
+    <update id="updateExpert" parameterType="Expert">
+        update expert
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="jobTitle != null and jobTitle != ''">job_title = #{jobTitle},</if>
+            <if test="work != null and work != ''">work = #{work},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="specialty != null">specialty = #{specialty},</if>
+            <if test="email != null and email != ''">email = #{email},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="idCard != null and idCard != ''">id_card = #{idCard},</if>
+        </trim>
+        where expertId = #{expertid}
+    </update>
+
+    <delete id="deleteExpertById" parameterType="Long">
+        delete from expert where expertId = #{expertid}
+    </delete>
+
+    <delete id="deleteExpertByIds" parameterType="String">
+        delete from expert where expertId in 
+        <foreach item="expertid" collection="array" open="(" separator="," close=")">
+            #{expertid}
+        </foreach>
+    </delete>
+    
+</mapper>

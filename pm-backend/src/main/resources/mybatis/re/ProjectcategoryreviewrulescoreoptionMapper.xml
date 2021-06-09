@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.re.mapper.ProjectcategoryreviewrulescoreoptionMapper">
+    
+    <resultMap type="Projectcategoryreviewrulescoreoption" id="ProjectcategoryreviewrulescoreoptionResult">
+        <result property="scoreId"    column="ScoreId"    />
+        <result property="categoryCode"    column="CategoryCode"    />
+        <result property="phaseCode"    column="PhaseCode"    />
+        <result property="scoreTitle"    column="ScoreTitle"    />
+        <result property="minScore"    column="MinScore"    />
+        <result property="maxScore"    column="MaxScore"    />
+        <result property="scroreDesc"    column="ScroreDesc"    />
+    </resultMap>
+
+    <sql id="selectProjectcategoryreviewrulescoreoptionVo">
+        select ScoreId, CategoryCode, PhaseCode, ScoreTitle, MinScore, MaxScore, ScroreDesc from projectcategoryreviewrulescoreoption
+    </sql>
+    <select id="selectScoreByCcPc" resultMap="ProjectcategoryreviewrulescoreoptionResult">
+        select * from projectcategoryreviewrulescoreoption where CategoryCode = #{categoryCode} and PhaseCode = #{phaseCode}
+    </select>
+
+    <select id="selectProjectcategoryreviewrulescoreoptionList" parameterType="Projectcategoryreviewrulescoreoption" resultMap="ProjectcategoryreviewrulescoreoptionResult">
+        <include refid="selectProjectcategoryreviewrulescoreoptionVo"/>
+        <where>  
+            <if test="categoryCode != null  and categoryCode != ''"> and CategoryCode = #{categoryCode}</if>
+            <if test="phaseCode != null  and phaseCode != ''"> and PhaseCode = #{phaseCode}</if>
+        </where>
+    </select>
+    
+    <select id="selectProjectcategoryreviewrulescoreoptionById" parameterType="Long" resultMap="ProjectcategoryreviewrulescoreoptionResult">
+        <include refid="selectProjectcategoryreviewrulescoreoptionVo"/>
+        where ScoreId = #{scoreId}
+    </select>
+        
+    <insert id="insertProjectcategoryreviewrulescoreoption" parameterType="Projectcategoryreviewrulescoreoption" useGeneratedKeys="true" keyProperty="scoreId">
+        insert into projectcategoryreviewrulescoreoption
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="categoryCode != null">CategoryCode,</if>
+            <if test="phaseCode != null">PhaseCode,</if>
+            <if test="scoreTitle != null and scoreTitle != ''">ScoreTitle,</if>
+            <if test="minScore != null">MinScore,</if>
+            <if test="maxScore != null">MaxScore,</if>
+            <if test="scroreDesc != null and scroreDesc != ''">ScroreDesc,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="categoryCode != null">#{categoryCode},</if>
+            <if test="phaseCode != null">#{phaseCode},</if>
+            <if test="scoreTitle != null and scoreTitle != ''">#{scoreTitle},</if>
+            <if test="minScore != null">#{minScore},</if>
+            <if test="maxScore != null">#{maxScore},</if>
+            <if test="scroreDesc != null and scroreDesc != ''">#{scroreDesc},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProjectcategoryreviewrulescoreoption" parameterType="Projectcategoryreviewrulescoreoption">
+        update projectcategoryreviewrulescoreoption
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="categoryCode != null">CategoryCode = #{categoryCode},</if>
+            <if test="phaseCode != null">PhaseCode = #{phaseCode},</if>
+            <if test="scoreTitle != null and scoreTitle != ''">ScoreTitle = #{scoreTitle},</if>
+            <if test="minScore != null">MinScore = #{minScore},</if>
+            <if test="maxScore != null">MaxScore = #{maxScore},</if>
+            <if test="scroreDesc != null and scroreDesc != ''">ScroreDesc = #{scroreDesc},</if>
+        </trim>
+        where ScoreId = #{scoreId}
+    </update>
+
+    <delete id="deleteProjectcategoryreviewrulescoreoptionById" parameterType="Long">
+        delete from projectcategoryreviewrulescoreoption where ScoreId = #{scoreId}
+    </delete>
+
+    <delete id="deleteProjectcategoryreviewrulescoreoptionByIds" parameterType="String">
+        delete from projectcategoryreviewrulescoreoption where ScoreId in 
+        <foreach item="scoreId" collection="array" open="(" separator="," close=")">
+            #{scoreId}
+        </foreach>
+    </delete>
+    
+</mapper>

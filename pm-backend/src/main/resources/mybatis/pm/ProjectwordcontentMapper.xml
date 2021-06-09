@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.pm.mapper.ProjectwordcontentMapper">
+
+    <resultMap type="Projectwordcontent" id="ProjectwordcontentResult">
+        <result property="categoryCode"    column="CategoryCode"    />
+        <result property="phaseCode"    column="PhaseCode"    />
+        <result property="bookmarkCode"    column="BookmarkCode"    />
+        <result property="projectId"    column="ProjectId"    />
+        <result property="textContent"    column="TextContent"    />
+        <result property="attachedWordPath"    column="AttachedWordPath"    />
+        <result property="reportYear"    column="ReportYear"    />
+    </resultMap>
+
+    <insert id="insertProjectwordcontent" parameterType="Projectwordcontent">
+        insert into projectwordcontent
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="categoryCode != null">CategoryCode,</if>
+            <if test="phaseCode != null">PhaseCode,</if>
+            <if test="bookmarkCode != null">BookmarkCode,</if>
+            <if test="projectId != null">ProjectId,</if>
+            <if test="textContent != null">TextContent,</if>
+            <if test="attachedWordPath != null">AttachedWordPath,</if>
+            <if test="reportYear != null">ReportYear,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="categoryCode != null">#{categoryCode},</if>
+            <if test="phaseCode != null">#{phaseCode},</if>
+            <if test="bookmarkCode != null">#{bookmarkCode},</if>
+            <if test="projectId != null">#{projectId},</if>
+            <if test="textContent != null">#{textContent},</if>
+            <if test="attachedWordPath != null">#{attachedWordPath},</if>
+            <if test="reportYear != null">#{reportYear},</if>
+        </trim>
+    </insert>
+
+    <sql id="selectProjectwordcontentVo">
+        select CategoryCode, PhaseCode, BookmarkCode, ProjectId, TextContent, AttachedWordPath, ReportYear from projectwordcontent
+    </sql>
+
+    <select id="selectProjectwordcontentList" resultMap="ProjectwordcontentResult">
+        <include refid="selectProjectwordcontentVo"/>
+        where ProjectId = #{projectId} and PhaseCode = #{phaseCode}
+    </select>
+
+
+    <select id="checkUnique" parameterType="Projectwordcontent" resultType="int">
+        select count(*) from projectwordcontent where BookmarkCode = #{bookmarkCode} and ProjectId = #{projectId} and PhaseCode = #{phaseCode}
+    </select>
+
+    <update id="updateProjectwordcontent" parameterType="Projectwordcontent">
+        update projectwordcontent
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="phaseCode != null">PhaseCode = #{phaseCode},</if>
+            <if test="bookmarkCode != null">BookmarkCode = #{bookmarkCode},</if>
+            <if test="projectId != null">ProjectId = #{projectId},</if>
+            <if test="textContent != null">TextContent = #{textContent},</if>
+            <if test="attachedWordPath != null">AttachedWordPath = #{attachedWordPath},</if>
+            <if test="reportYear != null">ReportYear = #{reportYear},</if>
+        </trim>
+        where BookmarkCode = #{bookmarkCode} and ProjectId = #{projectId} and phaseCode = #{phaseCode}
+    </update>
+
+    <insert id="insertProjectwordcontentList" parameterType="List">
+        insert into projectwordcontent (ProjectId,CategoryCode,PhaseCode,BookmarkCode,TextContent,AttachedWordPath,ReportYear) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.projectId},#{item.categoryCode},#{item.phaseCode},#{item.bookmarkCode},#{item.textContent},
+            #{item.attachedWordPath},#{item.reportYear})
+        </foreach>
+    </insert>
+
+    <delete id="deleteProjectwordcontentList">
+        delete from projectwordcontent where ProjectId = #{param1} and PhaseCode = #{param2}
+    </delete>
+</mapper>

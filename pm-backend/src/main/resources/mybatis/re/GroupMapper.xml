@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.re.mapper.GroupMapper">
+
+    <resultMap type="Group" id="GroupResult">
+        <result property="groupId"    column="GroupId"    />
+        <result property="groupName"    column="GroupName"    />
+        <result property="groupYear"    column="GroupYear"    />
+        <result property="categoryCode"    column="CategoryCode"    />
+        <result property="phaseCode"    column="PhaseCode"    />
+        <result property="groupManagerUserCode"    column="GroupManagerUserCode"    />
+        <result property="budgetManagerUserCode"    column="BudgetManagerUserCode"    />
+        <result property="addBy"    column="AddBy"    />
+        <result property="addTime"    column="AddTime"    />
+    </resultMap>
+
+    <sql id="selectGroupVo">
+        select GroupId, GroupName, GroupYear, CategoryCode, PhaseCode, GroupManagerUserCode, BudgetManagerUserCode, AddBy, AddTime from group
+    </sql>
+
+    <select id="selectGroupList" parameterType="Group" resultMap="GroupResult">
+        <include refid="selectGroupVo"/>
+        <where>
+            <if test="groupName != null  and groupName != ''"> and GroupName like concat('%', #{groupName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectGroupById" parameterType="Long" resultMap="GroupResult">
+        <include refid="selectGroupVo"/>
+        where GroupId = #{groupId}
+    </select>
+
+    <insert id="insertGroup" parameterType="Group" useGeneratedKeys="true" keyProperty="groupId">
+        insert into group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="groupName != null">GroupName,</if>
+            <if test="groupYear != null">GroupYear,</if>
+            <if test="categoryCode != null">CategoryCode,</if>
+            <if test="phaseCode != null">PhaseCode,</if>
+            <if test="groupManagerUserCode != null">GroupManagerUserCode,</if>
+            <if test="budgetManagerUserCode != null">BudgetManagerUserCode,</if>
+            <if test="addBy != null">AddBy,</if>
+            <if test="addTime != null">AddTime,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="groupName != null">#{groupName},</if>
+            <if test="groupYear != null">#{groupYear},</if>
+            <if test="categoryCode != null">#{categoryCode},</if>
+            <if test="phaseCode != null">#{phaseCode},</if>
+            <if test="groupManagerUserCode != null">#{groupManagerUserCode},</if>
+            <if test="budgetManagerUserCode != null">#{budgetManagerUserCode},</if>
+            <if test="addBy != null">#{addBy},</if>
+            <if test="addTime != null">#{addTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateGroup" parameterType="Group">
+        update group
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="groupName != null">GroupName = #{groupName},</if>
+            <if test="groupYear != null">GroupYear = #{groupYear},</if>
+            <if test="categoryCode != null">CategoryCode = #{categoryCode},</if>
+            <if test="phaseCode != null">PhaseCode = #{phaseCode},</if>
+            <if test="groupManagerUserCode != null">GroupManagerUserCode = #{groupManagerUserCode},</if>
+            <if test="budgetManagerUserCode != null">BudgetManagerUserCode = #{budgetManagerUserCode},</if>
+            <if test="addBy != null">AddBy = #{addBy},</if>
+            <if test="addTime != null">AddTime = #{addTime},</if>
+        </trim>
+        where GroupId = #{groupId}
+    </update>
+
+    <delete id="deleteGroupById" parameterType="Long">
+        delete from group where GroupId = #{groupId}
+    </delete>
+
+    <delete id="deleteGroupByIds" parameterType="String">
+        delete from group where GroupId in
+        <foreach item="groupId" collection="array" open="(" separator="," close=")">
+            #{groupId}
+        </foreach>
+    </delete>
+
+</mapper>

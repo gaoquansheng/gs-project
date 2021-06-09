@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.pm.mapper.ProjectconclusionreportMapper">
+    
+    <resultMap type="Projectconclusionreport" id="ProjectconclusionreportResult">
+        <result property="projectId"    column="ProjectId"    />
+        <result property="projectCode"    column="ProjectCode"    />
+        <result property="categoryCode"    column="CategoryCode"    />
+        <result property="projectName"    column="ProjectName"    />
+        <result property="conclusionYear"    column="ConclusionYear"    />
+        <result property="userCode"    column="UserCode"    />
+        <result property="userName"    column="UserName"    />
+        <result property="conclusionEndDate"    column="ConclusionEndDate"    />
+        <result property="proxyOrgCode"    column="ProxyOrgCode"    />
+        <result property="proxyOrgName"    column="ProxyOrgName"    />
+        <result property="myOrgCode"    column="MyOrgCode"    />
+        <result property="myOrgName"    column="MyOrgName"    />
+        <result property="pdfPath"    column="PdfPath"    />
+        <result property="projectStatus"    column="ProjectStatus"    />
+        <result property="outAppAmount"    column="OutAppAmount"    />
+        <result property="outMyAmount"    column="OutMyAmount"    />
+        <result property="outTotalaAmount"    column="OutTotalAmount"    />
+        <result property="summary"    column="Summary"    />
+    </resultMap>
+
+    <sql id="selectProjectconclusionreportVo">
+        select ProjectId, ProjectCode, CategoryCode, ProjectName, ConclusionYear, UserCode, UserName, ConclusionEndDate, ProxyOrgCode, ProxyOrgName, MyOrgCode, MyOrgName, PdfPath, ProjectStatus, OutAppAmount, OutMyAmount, OutTotalAmount, Summary from projectconclusionreport
+    </sql>
+
+    <select id="selectProjectconclusionreportList" parameterType="Projectconclusionreport" resultMap="ProjectconclusionreportResult">
+        <include refid="selectProjectconclusionreportVo"/>
+        <where>  
+            <if test="projectCode != null  and projectCode != ''"> and ProjectCode = #{projectCode}</if>
+            <if test="categoryCode != null  and categoryCode != ''"> and CategoryCode = #{categoryCode}</if>
+            <if test="projectName != null  and projectName != ''"> and ProjectName like concat('%', #{projectName}, '%')</if>
+            <if test="conclusionYear != null "> and ConclusionYear = #{conclusionYear}</if>
+            <if test="userCode != null  and userCode != ''"> and UserCode = #{userCode}</if>
+            <if test="userName != null  and userName != ''"> and UserName like concat('%', #{userName}, '%')</if>
+            <if test="conclusionEndDate != null "> and ConclusionEndDate = #{conclusionEndDate}</if>
+            <if test="proxyOrgCode != null  and proxyOrgCode != ''"> and ProxyOrgCode = #{proxyOrgCode}</if>
+            <if test="proxyOrgName != null  and proxyOrgName != ''"> and ProxyOrgName like concat('%', #{proxyOrgName}, '%')</if>
+            <if test="myOrgCode != null  and myOrgCode != ''"> and MyOrgCode = #{myOrgCode}</if>
+            <if test="myOrgName != null  and myOrgName != ''"> and MyOrgName like concat('%', #{myOrgName}, '%')</if>
+            <if test="pdfPath != null  and pdfPath != ''"> and PdfPath = #{pdfPath}</if>
+            <if test="projectStatus != null  and projectStatus != ''"> and ProjectStatus = #{projectStatus}</if>
+            <if test="outAppAmount != null "> and OutAppAmount = #{outAppAmount}</if>
+            <if test="outMyAmount != null "> and OutMyAmount = #{outMyAmount}</if>
+            <if test="outTotalaAmount != null "> and OutTotalAmount = #{outTotalaAmount}</if>
+            <if test="summary != null  and summary != ''"> and Summary = #{summary}</if>
+        </where>
+    </select>
+    
+    <select id="selectProjectconclusionreportById" parameterType="Long" resultMap="ProjectconclusionreportResult">
+        <include refid="selectProjectconclusionreportVo"/>
+        where ProjectId = #{projectId}
+    </select>
+        
+    <insert id="insertProjectconclusionreport" parameterType="Projectconclusionreport">
+        insert into projectconclusionreport
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectId != null">ProjectId,</if>
+            <if test="projectCode != null">ProjectCode,</if>
+            <if test="categoryCode != null">CategoryCode,</if>
+            <if test="projectName != null">ProjectName,</if>
+            <if test="conclusionYear != null">ConclusionYear,</if>
+            <if test="userCode != null">UserCode,</if>
+            <if test="userName != null">UserName,</if>
+            <if test="conclusionEndDate != null">ConclusionEndDate,</if>
+            <if test="proxyOrgCode != null">ProxyOrgCode,</if>
+            <if test="proxyOrgName != null">ProxyOrgName,</if>
+            <if test="myOrgCode != null">MyOrgCode,</if>
+            <if test="myOrgName != null">MyOrgName,</if>
+            <if test="pdfPath != null">PdfPath,</if>
+            <if test="projectStatus != null">ProjectStatus,</if>
+            <if test="outAppAmount != null">OutAppAmount,</if>
+            <if test="outMyAmount != null">OutMyAmount,</if>
+            <if test="outTotalaAmount != null">OutTotalAmount,</if>
+            <if test="summary != null">Summary,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectId != null">#{projectId},</if>
+            <if test="projectCode != null">#{projectCode},</if>
+            <if test="categoryCode != null">#{categoryCode},</if>
+            <if test="projectName != null">#{projectName},</if>
+            <if test="conclusionYear != null">#{conclusionYear},</if>
+            <if test="userCode != null">#{userCode},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="conclusionEndDate != null">#{conclusionEndDate},</if>
+            <if test="proxyOrgCode != null">#{proxyOrgCode},</if>
+            <if test="proxyOrgName != null">#{proxyOrgName},</if>
+            <if test="myOrgCode != null">#{myOrgCode},</if>
+            <if test="myOrgName != null">#{myOrgName},</if>
+            <if test="pdfPath != null">#{pdfPath},</if>
+            <if test="projectStatus != null">#{projectStatus},</if>
+            <if test="outAppAmount != null">#{outAppAmount},</if>
+            <if test="outMyAmount != null">#{outMyAmount},</if>
+            <if test="outTotalaAmount != null">#{outTotalaAmount},</if>
+            <if test="summary != null">#{summary},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProjectconclusionreport" parameterType="Projectconclusionreport">
+        update projectconclusionreport
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectCode != null">ProjectCode = #{projectCode},</if>
+            <if test="categoryCode != null">CategoryCode = #{categoryCode},</if>
+            <if test="projectName != null">ProjectName = #{projectName},</if>
+            <if test="conclusionYear != null">ConclusionYear = #{conclusionYear},</if>
+            <if test="userCode != null">UserCode = #{userCode},</if>
+            <if test="userName != null">UserName = #{userName},</if>
+            <if test="conclusionEndDate != null">ConclusionEndDate = #{conclusionEndDate},</if>
+            <if test="proxyOrgCode != null">ProxyOrgCode = #{proxyOrgCode},</if>
+            <if test="proxyOrgName != null">ProxyOrgName = #{proxyOrgName},</if>
+            <if test="myOrgCode != null">MyOrgCode = #{myOrgCode},</if>
+            <if test="myOrgName != null">MyOrgName = #{myOrgName},</if>
+            <if test="pdfPath != null">PdfPath = #{pdfPath},</if>
+            <if test="projectStatus != null">ProjectStatus = #{projectStatus},</if>
+            <if test="outAppAmount != null">OutAppAmount = #{outAppAmount},</if>
+            <if test="outMyAmount != null">OutMyAmount = #{outMyAmount},</if>
+            <if test="outTotalaAmount != null">OutTotalAmount = #{outTotalaAmount},</if>
+            <if test="summary != null">Summary = #{summary},</if>
+        </trim>
+        where ProjectId = #{projectId}
+    </update>
+
+    <delete id="deleteProjectconclusionreportById" parameterType="Long">
+        delete from projectconclusionreport where ProjectId = #{projectId}
+    </delete>
+
+    <delete id="deleteProjectconclusionreportByIds" parameterType="String">
+        delete from projectconclusionreport where ProjectId in 
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </delete>
+    
+</mapper>

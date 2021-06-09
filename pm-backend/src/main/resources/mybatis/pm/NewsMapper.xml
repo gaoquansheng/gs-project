@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.pm.mapper.NewsMapper">
+    
+    <resultMap type="News" id="NewsResult">
+        <result property="newsid"    column="NewsId"    />
+        <result property="newstitle"    column="NewsTitle"    />
+        <result property="newscontent"    column="NewsContent"    />
+        <result property="adddate"    column="AddDate"    />
+        <result property="clicks"    column="Clicks"    />
+        <result property="usercode"    column="UserCode"    />
+    </resultMap>
+
+    <sql id="selectNewsVo">
+        select NewsId, NewsTitle, NewsContent, AddDate, Clicks, UserCode from news
+    </sql>
+
+    <select id="selectNewsList" parameterType="News" resultMap="NewsResult">
+        <include refid="selectNewsVo"/>
+        <where>  
+            <if test="newstitle != null  and newstitle != ''"> and NewsTitle like concat('%', #{newstitle}, '%')</if>
+            <if test="newscontent != null  and newscontent != ''"> and NewsContent like concat('%', #{newscontent}, '%')</if>
+            <if test="params.beginAdddate != null and params.beginAdddate != '' and params.endAdddate != null and params.endAdddate != ''"> and AddDate between #{params.beginAdddate} and #{params.endAdddate}</if>
+            <if test="clicks != null "> and Clicks = #{clicks}</if>
+            <if test="usercode != null  and usercode != ''"> and UserCode like concat('%', #{usercode}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectNewsById" parameterType="Long" resultMap="NewsResult">
+        <include refid="selectNewsVo"/>
+        where NewsId = #{newsid}
+    </select>
+        
+    <insert id="insertNews" parameterType="News">
+        insert into news
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="newstitle != null">NewsTitle,</if>
+            <if test="newscontent != null">NewsContent,</if>
+            <if test="adddate != null">AddDate,</if>
+            <if test="clicks != null">Clicks,</if>
+            <if test="usercode != null">UserCode,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="newstitle != null">#{newstitle},</if>
+            <if test="newscontent != null">#{newscontent},</if>
+            <if test="adddate != null">#{adddate},</if>
+            <if test="clicks != null">#{clicks},</if>
+            <if test="usercode != null">#{usercode},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNews" parameterType="News">
+        update news
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="newstitle != null">NewsTitle = #{newstitle},</if>
+            <if test="newscontent != null">NewsContent = #{newscontent},</if>
+            <if test="adddate != null">AddDate = #{adddate},</if>
+            <if test="clicks != null">Clicks = #{clicks},</if>
+            <if test="usercode != null">UserCode = #{usercode},</if>
+        </trim>
+        where NewsId = #{newsid}
+    </update>
+
+    <delete id="deleteNewsById" parameterType="Long">
+        delete from news where NewsId = #{newsid}
+    </delete>
+
+    <delete id="deleteNewsByIds" parameterType="String">
+        delete from news where NewsId in 
+        <foreach item="newsid" collection="array" open="(" separator="," close=")">
+            #{newsid}
+        </foreach>
+    </delete>
+    
+</mapper>

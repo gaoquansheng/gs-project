@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.pc.mapper.ProjectcategoryphasewordbookmarkMapper">
+
+    <resultMap type="Projectcategoryphasewordbookmark" id="ProjectcategoryphasewordbookmarkResult">
+        <result property="categoryCode"    column="CategoryCode"    />
+        <result property="phaseCode"    column="PhaseCode"    />
+        <result property="bookMarkCode"    column="BookmarkCode"    />
+        <result property="bookMarkName"    column="BookmarkName"    />
+        <result property="bookMarkDesc"    column="BookmarkDesc"    />
+        <result property="contentType"    column="ContentType"    />
+        <result property="isEnable"    column="IsEnable"    />
+        <result property="orderSeq"    column="OrderSeq"    />
+        <result property="refWordPath"    column="RefWordPath"    />
+        <result property="phaseName"    column="PhaseName"    />
+
+
+    </resultMap>
+
+    <sql id="selectProjectcategoryphasewordbookmarkVo">
+        select CategoryCode, pp.PhaseCode, BookmarkCode, BookmarkName, BookmarkDesc, ContentType, IsEnable, OrderSeq, RefWordPath ,PhaseName from projectcategoryphasewordbookmark pp LEFT JOIN workflowphase wp on pp.PhaseCode = wp.PhaseCode
+    </sql>
+
+    <select id="selectProjectcategoryphasewordbookmarkList" parameterType="Projectcategoryphasewordbookmark" resultMap="ProjectcategoryphasewordbookmarkResult">
+        <include refid="selectProjectcategoryphasewordbookmarkVo"/>
+        <where>
+            <if test="categoryCode != null  and categoryCode != ''"> and CategoryCode = #{categoryCode}</if>
+            <if test="phaseCode != null  and phaseCode != ''"> and pp.PhaseCode = #{phaseCode}</if>
+        </where>
+    </select>
+
+    <select id="selectProjectcategoryphasewordbookmarkById" parameterType="String" resultMap="ProjectcategoryphasewordbookmarkResult">
+        <include refid="selectProjectcategoryphasewordbookmarkVo"/>
+        where CategoryCode = #{param1} and pp.PhaseCode = #{param2} and BookMarkCode = #{param3}
+    </select>
+
+    <insert id="insertProjectcategoryphasewordbookmark" parameterType="Projectcategoryphasewordbookmark">
+        insert into projectcategoryphasewordbookmark
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="categoryCode != null and categoryCode != ''">CategoryCode,</if>
+            <if test="phaseCode != null and phaseCode != ''">PhaseCode,</if>
+            <if test="bookMarkCode != null and bookMarkCode != ''">BookmarkCode,</if>
+            <if test="bookMarkName != null">BookmarkName,</if>
+            <if test="bookMarkDesc != null">BookmarkDesc,</if>
+            <if test="contentType != null">ContentType,</if>
+            <if test="isEnable != null">IsEnable,</if>
+            <if test="orderSeq != null">OrderSeq,</if>
+            <if test="refWordPath != null">RefWordPath,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="categoryCode != null and categoryCode != ''">#{categoryCode},</if>
+            <if test="phaseCode != null and phaseCode != ''">#{phaseCode},</if>
+            <if test="bookMarkCode != null and bookMarkCode != ''">#{bookMarkCode},</if>
+            <if test="bookMarkName != null">#{bookMarkName},</if>
+            <if test="bookMarkDesc != null">#{bookMarkDesc},</if>
+            <if test="contentType != null">#{contentType},</if>
+            <if test="isEnable != null">#{isEnable},</if>
+            <if test="orderSeq != null">#{orderSeq},</if>
+            <if test="refWordPath != null">#{refWordPath},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProjectcategoryphasewordbookmark" parameterType="Projectcategoryphasewordbookmark">
+        update  projectcategoryphasewordbookmark
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bookMarkName != null">BookmarkName = #{bookMarkName},</if>
+            <if test="bookMarkDesc != null">BookmarkDesc = #{bookMarkDesc},</if>
+            <if test="contentType != null">ContentType = #{contentType},</if>
+            <if test="isEnable != null">IsEnable = #{isEnable},</if>
+            <if test="orderSeq != null">OrderSeq = #{orderSeq},</if>
+            <if test="refWordPath != null">RefWordPath = #{refWordPath},</if>
+        </trim>
+        where CategoryCode = #{categoryCode} and PhaseCode = #{phaseCode} and BookmarkCode = #{bookMarkCode}
+    </update>
+
+    <delete id="deleteProjectcategoryphasewordbookmarkById" parameterType="String">
+        delete from projectcategoryphasewordbookmark where CategoryCode = #{categoryCode}
+    </delete>
+
+    <delete id="deleteProjectcategoryphasewordbookmarkByIds" parameterType="java.util.List">
+        delete from projectcategoryphasewordbookmark where
+        <foreach collection="list"  item="item" separator=" or " index="index">
+            (CategoryCode = #{item.categoryCode} and PhaseCode = #{item.phaseCode} and BookmarkCode = #{item.bookMarkCode})
+        </foreach>
+    </delete>
+
+    <select id="selectPhbmByCode" resultMap="ProjectcategoryphasewordbookmarkResult">
+        <include refid="selectProjectcategoryphasewordbookmarkVo"/>
+         where CategoryCode = #{categoryCode} and pp.PhaseCode = #{phaseCode} and isEnable = 1;
+    </select>
+</mapper>

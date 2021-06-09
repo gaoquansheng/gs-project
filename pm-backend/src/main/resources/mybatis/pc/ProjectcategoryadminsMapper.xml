@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cidp.pc.mapper.ProjectcategoryadminsMapper">
+    
+    <resultMap type="Projectcategoryadmins" id="ProjectcategoryadminsResult">
+        <result property="categoryCode"    column="CategoryCode"    />
+        <result property="categoryName"    column="CategoryName"    />
+        <result property="adminuserCode"    column="AdminUserCode"    />
+        <result property="adminuserName"    column="AdminUserName"    />
+    </resultMap>
+
+    <sql id="selectProjectcategoryadminsVo">
+        select CategoryCode, CategoryName, AdminUserCode, AdminUserName from projectcategoryadmins
+    </sql>
+
+    <select id="selectProjectcategoryadminsList" parameterType="Projectcategoryadmins" resultMap="ProjectcategoryadminsResult">
+        <include refid="selectProjectcategoryadminsVo"/>
+        <where>  
+            <if test="categoryCode != null  and categoryCode != ''"> and CategoryCode = #{categoryCode}</if>
+        </where>
+    </select>
+    
+    <select id="selectProjectcategoryadminsById" parameterType="String" resultMap="ProjectcategoryadminsResult">
+        <include refid="selectProjectcategoryadminsVo"/>
+        where CategoryCode = #{categoryCode}
+    </select>
+
+    <select id="selectProjectcategoryadminsByAdminUserName" parameterType="String" resultMap="ProjectcategoryadminsResult">
+        <include refid="selectProjectcategoryadminsVo"/>
+        where AdminUserName = #{adminUserName} and CategoryCode in (select CategoryCode from projectcategory where Enabled = 1)
+    </select>
+        
+    <insert id="insertProjectcategoryadmins" parameterType="Projectcategoryadmins">
+        insert into projectcategoryadmins
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="categoryCode != null">CategoryCode,</if>
+            <if test="categoryName != null">CategoryName,</if>
+            <if test="adminuserCode != null">AdminUserCode,</if>
+            <if test="adminuserName != null">AdminUserName,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="categoryCode != null">#{categoryCode},</if>
+            <if test="categoryName != null">#{categoryName},</if>
+            <if test="adminuserCode != null">#{adminuserCode},</if>
+            <if test="adminuserName != null">#{adminuserName},</if>
+         </trim>
+    </insert>
+
+
+
+
+    <insert id="insertProjectcategoryadminsByList">
+        insert into projectcategoryadmins(CategoryCode,CategoryName,AdminUserCode,AdminUserName) values
+        <foreach item="user" collection="users" separator="," >
+            (
+            #{categoryCode},
+            #{categoryName},
+            #{user.userId},
+            #{user.userName}
+            )
+        </foreach>
+    </insert>
+
+    <select id="checkUnique" resultType="int">
+		select count(*) from projectcategoryadmins where CategoryCode = #{categoryCode} and AdminUserCode in
+        <foreach item="adminUserCode" collection="adminUserCodes" open="(" separator="," close=")">
+            #{adminUserCode}
+        </foreach>
+	</select>
+
+
+
+
+    <update id="updateProjectcategoryadmins" parameterType="Projectcategoryadmins">
+        update projectcategoryadmins
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="categoryName != null">CategoryName = #{categoryName},</if>
+            <if test="adminuserCode != null">AdminUserCode = #{adminuserCode},</if>
+            <if test="adminuserName != null">AdminUserName = #{adminuserName},</if>
+        </trim>
+        where CategoryCode = #{categoryCode}
+    </update>
+
+    <delete id="deleteProjectcategoryadminsById" parameterType="String">
+        delete from projectcategoryadmins where CategoryCode = #{categoryCode}
+    </delete>
+
+    <delete id="deleteProjectcategoryadminsByIds" parameterType="String">
+        delete from projectcategoryadmins where CategoryCode in 
+        <foreach item="categoryCode" collection="array" open="(" separator="," close=")">
+            #{categoryCode}
+        </foreach>
+    </delete>
+
+    <delete id="deleteProjectcategoryadminsByIdAndName">
+        delete from projectcategoryadmins where CategoryCode = #{categoryCode}
+        and adminUserCode in
+        <foreach item="adminUserCode" collection="adminUserCode" open="(" separator="," close=")">
+            #{adminUserCode}
+        </foreach>
+
+    </delete>
+    
+</mapper>
